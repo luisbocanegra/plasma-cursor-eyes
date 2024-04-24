@@ -2,9 +2,11 @@
 
 # Cursor Eyes
 
+![panel](screenshots/panel.png)
+
 Follow mouse widget for the KDE Plasma Desktop inspired by [xfce4-eyes-plugin](https://gitlab.xfce.org/panel-plugins/xfce4-eyes-plugin). A demo of getting KWin Script output from a Plasma Widget using D-Bus and Python
 
-![panel](screenshots/panel.png)
+https://github.com/luisbocanegra/plasma-cursor-eyes/assets/15076387/e4e70877-4d5e-4ca6-b09b-1bc4b3c41480
 
 </div>
 
