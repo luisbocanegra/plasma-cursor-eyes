@@ -1,0 +1,22 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "luisbocanegra17b@gmail.com",
+                "Name": "Luis Bocanegra"
+            }
+        ],
+        "BugReportUrl": "https://github.com/luisbocanegra/plasma-cursor-eyes/issues",
+        "Category": "System Information",
+        "Description": "Follow mouse demo inspired by xfce4-eyes-plugin",
+        "EnabledByDefault": false,
+        "Id": "luisbocanegra.cursor.eyes",
+        "License": "GPL-3.0",
+        "Name": "Cursor Eyes",
+        "Icon": "cursor-arrow",
+        "Version": "0.1.0",
+        "Website": "https://github.com/luisbocanegra/plasma-cursor-eyes"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
