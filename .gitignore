@@ -31,10 +31,11 @@
 *.out
 *.app
 
-*.txt
+./*.txt
 
 build/
 
 *.plasmoid
+*.kwinscript
 
 playground/

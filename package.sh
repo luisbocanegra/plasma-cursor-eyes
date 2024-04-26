@@ -5,5 +5,5 @@ if [ -d "build" ]; then
 fi
 
 # package plasmoid, skip installing
-cmake -B build -S . -DINSTALL_PLASMOID=OFF -DPACKAGE_PLASMOID=ON
+cmake -B build -S . -DINSTALL_PLASMOID=OFF -DPACKAGE_PLASMOID=ON -DINSTALL_SCRIPT=OFF -DPACKAGE_SCRIPT=ON
 cmake --build build
