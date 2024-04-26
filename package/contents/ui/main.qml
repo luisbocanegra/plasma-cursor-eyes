@@ -219,7 +219,7 @@ PlasmoidItem {
     //     interval: 1000
     //     onTriggered: {
     //         if (enableDebug) {
-    //             dumpProps(root)
+    //             dumpProps(runService)
     //         }
     //     }
     // }
@@ -240,8 +240,13 @@ PlasmoidItem {
         getPositionTimer.start()
     }
 
+    // TODO: this sometimes doesn't work, delaying plasmashell stop/restart
     function stopTasks() {
-        runService.exec("true")
+        printLog`stopping`;
+        getPositionTimer.stop()
+        runService.disconnectSource(serviceCmd)
+        runService.removeSource(serviceCmd)
+        printLog`bye`;
     }
 
     Connections {
