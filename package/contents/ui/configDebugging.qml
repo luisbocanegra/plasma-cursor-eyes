@@ -8,8 +8,6 @@ KCM.SimpleKCM {
     id: root
     property alias cfg_enableDebug: enableDebug.checked
 
-    signal configurationChanged
-
     Kirigami.FormLayout {
         id: generalPage
         Layout.alignment: Qt.AlignTop

@@ -5,17 +5,11 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name=""/>
 
-  <group name="General">
-    <entry name="enableDebug" type="Bool">
+  <group name="">
+    <entry name="EnableDebug" type="Bool">
       <default>false</default>
     </entry>
-    <entry name="qdbusExecutable" type="String">
-      <default>qdbus6</default>
-    </entry>
-    <entry name="pythonExecutable" type="String">
-      <default>python3</default>
-    </entry>
-    <entry name="updatesPerSecond" type="Int">
+    <entry name="UpdatesPerSecond" type="Int">
       <default>30</default>
     </entry>
   </group>

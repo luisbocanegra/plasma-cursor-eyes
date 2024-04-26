@@ -18,5 +18,6 @@
         "Website": "https://github.com/luisbocanegra/plasma-cursor-eyes"
     },
     "X-Plasma-API": "declarativescript",
-    "X-Plasma-API-Minimum-Version": "6.0"
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted"
 }

@@ -8,8 +8,7 @@ KCM.SimpleKCM {
     id: root
     property alias cfg_qdbusExecutable: qdbusExecutable.text
     property alias cfg_pythonExecutable: pythonExecutable.text
-
-    signal configurationChanged
+    property alias cfg_updatesPerSecond: updatesPerSecond.value
 
     Kirigami.FormLayout {
         id: generalPage
@@ -26,6 +25,14 @@ KCM.SimpleKCM {
             placeholderText: qsTr("Custom qdbus command e.g. python, python3")
         }
 
+        RowLayout {
+            Kirigami.FormData.label: i18n("Updates per second:")
+            SpinBox {
+                id: updatesPerSecond
+                from: 1
+                to: 60
+            }
+        }
     }
 }
 

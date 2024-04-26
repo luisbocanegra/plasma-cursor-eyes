@@ -13,8 +13,9 @@ PlasmoidItem {
     property bool enableDebug: plasmoid.configuration.enableDebug
     property string qdbusExecutable: plasmoid.configuration.qdbusExecutable
     property string pythonExecutable: plasmoid.configuration.pythonExecutable
-    property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool bgFillPanel: plasmoid.configuration.bgFillPanel
+    property int updatesPerSecond: plasmoid.configuration.updatesPerSecond
+    property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool cursorPositionCmdRunning: false
     property string serviceCmd: pythonExecutable + " '" + serviceUtil + "'"
     property var cursorPositionCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_position"
@@ -97,7 +98,7 @@ PlasmoidItem {
 
     function printLog(strings, ...values) {
         if (enableDebug) {
-            let str = 'PLASMOID_EYES: ';
+            let str = 'CURSOR_EYES_WIDGET: ';
             strings.forEach((string, i) => {
                 str += string + (values[i] !== undefined ? values[i] : '');
             });
@@ -132,6 +133,10 @@ PlasmoidItem {
             onTriggered: {
                 eye.posX = eye.mapToGlobal(eye.x, eye.y).x + (horizontal ? offset : 0)
                 eye.posY = eye.mapToGlobal(eye.x, eye.y).y + (!horizontal ? offset : 0)
+                printLog`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`
+                printLog`Cursor position x:${root.cursorX} y:${root.cursorY}`
+                printLog`Eye x:${eye.posX.toFixed(2)} y:${eye.posY.toFixed(2)}`
+                printLog`Iris x:${iris.x.toFixed(2)} y:${iris.y.toFixed(2)}`
             }
         }
 
@@ -224,7 +229,7 @@ PlasmoidItem {
         id: getPositionTimer
         running: false
         repeat: true
-        interval: 16
+        interval: (1000 / updatesPerSecond)
         onTriggered: {
             if (!cursorPositionCmdRunning) getPosition.exec(cursorPositionCmd)
         }
