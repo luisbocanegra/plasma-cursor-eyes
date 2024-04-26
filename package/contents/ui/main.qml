@@ -1,9 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2014 Marco Martin <mart@kde.org>
-
-    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
-*/
-
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
@@ -18,14 +12,16 @@ PlasmoidItem {
     property string serviceUtil: toolsDir+"service.py"
     property bool enableDebug: plasmoid.configuration.enableDebug
     property string qdbusExecutable: plasmoid.configuration.qdbusExecutable
+    property string pythonExecutable: plasmoid.configuration.pythonExecutable
     property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool bgFillPanel: plasmoid.configuration.bgFillPanel
+    property bool cursorPositionCmdRunning: false
+    property string serviceCmd: pythonExecutable + " '" + serviceUtil + "'"
+    property var cursorPositionCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_position"
+    property var cursorX: -1
+    property var cursorY: -1
     Plasmoid.constraintHints: bgFillPanel ? Plasmoid.CanFillArea : Plasmoid.NoHint
-
-    function getServiceCommand(scriptName) {
-        const scriptFile = toolsDir + scriptName + ".js"
-        return "python3 '" + serviceUtil + "' '" + scriptName + "' '" + scriptFile + "' '" + qdbusExecutable + "'"
-    }
+    preferredRepresentation: fullRepresentation
 
     Layout.minimumWidth: onDesktop
         ? content.implicitWidth
@@ -38,15 +34,8 @@ PlasmoidItem {
         ? content.implicitHeight
         : horizontal ? content.implicitHeight : parent.width
 
-    preferredRepresentation: fullRepresentation
-
-    property var cursorPositionCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_position"
-    property string serviceCmd: getServiceCommand("getCursorPosition")
-    property var cursorX: -1
-    property var cursorY: -1
-
     P5Support.DataSource {
-        id: runCommand
+        id: getPosition
         engine: "executable"
         connectedSources: []
 
@@ -60,14 +49,15 @@ PlasmoidItem {
         }
 
         function exec(cmd) {
-            runCommand.connectSource(cmd)
+            cursorPositionCmdRunning = true
+            getPosition.connectSource(cmd)
         }
 
         signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
     }
 
     P5Support.DataSource {
-        id: runCommand2
+        id: runService
         engine: "executable"
         connectedSources: []
 
@@ -81,15 +71,16 @@ PlasmoidItem {
         }
 
         function exec(cmd) {
-            runCommand.connectSource(cmd)
+            getPosition.connectSource(cmd)
         }
 
         signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
     }
 
     Connections {
-        target: runCommand
+        target: getPosition
         function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
+            cursorPositionCmdRunning = false
             // console.log(cmd);
             if (exitCode!==0) return
             // console.log(stdout);
@@ -235,19 +226,17 @@ PlasmoidItem {
         repeat: true
         interval: 16
         onTriggered: {
-            runCommand.exec(cursorPositionCmd)
+            if (!cursorPositionCmdRunning) getPosition.exec(cursorPositionCmd)
         }
     }
 
     Component.onCompleted: {
-        runCommand2.exec(serviceCmd)
+        runService.exec(serviceCmd)
         getPositionTimer.start()
     }
 
     function stopTasks() {
-        runCommand2.exec("true")
-        runCommand.exec("true")
-        getPositionTimer.stop()
+        runService.exec("true")
     }
 
     Connections {
