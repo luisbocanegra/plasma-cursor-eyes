@@ -20,7 +20,7 @@ if(INSTALL_SCRIPT)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
         Package
     )
-    kpackage_install_package(package ${PLUGIN_ID} script kwin)
+    kpackage_install_package(package ${PLUGIN_ID} scripts kwin)
 endif()
 
 if(PACKAGE_SCRIPT)
