@@ -21,10 +21,10 @@ https://github.com/luisbocanegra/plasma-cursor-eyes/assets/15076387/e4e70877-4d5
 
 Make sure you have python 3, python-gobject, dbus-python, qt6-tools (for qdbus6) packages installed
 
-Install the widget from the KDE Store ~~[Plasma 6 version](https://store.kde.org/p/2145723)~~ TODO
+~~Install the widget from the KDE Store [Plasma 6 version](https://store.kde.org/p/2145723)~~ TODO
 
-1. **Right click on the Desktop** > **Edit Mode** > **Add Widgets** > **Get New Widgets** > **Download new...**
-2. **Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.
+1. ~~**Right click on the Desktop** > **Edit Mode** > **Add Widgets** > **Get New Widgets** > **Download new...**~~ TODO
+2. ~~**Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.~~ TODO
 
 ### Manual install
 
@@ -42,10 +42,13 @@ Install the widget from the KDE Store ~~[Plasma 6 version](https://store.kde.org
 
 ## How does it work?
 
-1. Loads and runs a KWin Script on the fly
-2. Creates a D-Bus service
-3. The KWin Script sends the cursor position to the D-Bus service
-4. The widget gets the last saved cursor position from the D-Bus service
+1. A KWin Script that reads the cursor position x times per second (default is 30)
+2. Widget starts a D-Bus service (python script) to store and return the cursor position
+3. The KWin Script sends the cursor position to the D-Bus service using `callDbus` (or `DBusCall` for the qml version)
+4. The widget gets the last saved cursor position from the running D-Bus service
+5. When there are multiple instances of the widget only one runs the service
+
+There are two versions of the script, one replaces the other. By default the Javascript version is what is installed and the qml one is provided mostly for demonstration purposes.
 
 ## Credits & Resources
 
