@@ -28,8 +28,10 @@ PlasmoidItem {
     property int eyesCount: 2
     property int eyeSpacing: 4
     property int eyeBorderWidth: 2
-    property real eyeScaling: 1
-    property real fontSize: 10
+    property real eyeScaling: 0.8
+    property real irisSize: 0.6 // 0.5 - 1
+    property real pupilSize: 0.4 // 0.5 - 1
+    property real fontSize: 7
 
     property int cursorGlobalX: -1
     property int cursorGlobalY: -1

@@ -20,8 +20,8 @@ Item {
         property int index: 0
         property real offsetX: root.isVertical ? (containerSize - buttonSize) / 2 : (eye.width + root.eyeSpacing ) * index + 0
         property real offsetY: root.isVertical ? (eye.width + root.eyeSpacing ) * index + 0 : (containerSize - buttonSize) / 2
-        property real centerX: (eye.x + eye.width / 2) + offsetX
-        property real centerY: (eye.y + eye.width / 2) + offsetY
+        property real centerX: (eye.x + iris.width) + offsetX
+        property real centerY: (eye.y + iris.width) + offsetY
         property int borderWidth: root.eyeBorderWidth
         property real angleDeg: Math.atan2(root.cursorY - centerY , root.cursorX - centerX ) * 180 / Math.PI;
         border.width: borderWidth
@@ -41,7 +41,7 @@ Item {
             var dx = mouseX - eyeX - eye.width / 2;
             var dy = mouseY - eyeY - eye.height / 2;
             var distance = Math.sqrt(dx * dx + dy * dy);
-            var maxDistance = (iris.width / 2) - (eye.borderWidth / 2);
+            var maxDistance = (eye.width - iris.width) / 2 - eye.borderWidth
             if (distance > maxDistance) {
                 dx *= maxDistance / distance;
                 dy *= maxDistance / distance;
@@ -53,10 +53,20 @@ Item {
 
         Rectangle {
             id: iris
-            width: eye.width/2 - eye.borderWidth / 2
+            width: eye.width * root.irisSize
             height: width
             radius: width / 2
-            color: "#0071AF"
+            color: Kirigami.Theme.highlightColor
+            
+            Rectangle {
+                id: pupil
+                anchors.centerIn: parent
+                width: iris.width * root.pupilSize
+                height: width
+                radius: width / 2
+                color: Kirigami.Theme.backgroundColor
+            }
+
             visible: root.scriptLoaded && root.serviceRunning
 
             property var ps: eye.calculateIrisPosition(root.cursorX, root.cursorY, eye.x + offsetX, eye.y + offsetY)
@@ -107,7 +117,7 @@ Item {
                     origin.y: pointerRect.height / 2
                     angle: Math.round(angleDeg);
                 },
-                Translate { x: eye.width /2 }
+                Translate { x: eye.width / 2 }
             ]
         }
 
@@ -116,10 +126,9 @@ Item {
             font.weight: Font.Bold
             visible: !iris.visible
             anchors.centerIn: parent
-            font.pointSize: (eye.width / 2) - (root.borderWidth / 2)
+            font.pointSize: iris.width - (root.borderWidth / 2)
         }
     }
-
 
     GridLayout {
         id: grid
@@ -127,7 +136,7 @@ Item {
         rows: root.isVertical ? 2 : 1
         width: root.isVertical ? compact.buttonSize : implicitWidth
         height: root.isVertical ? implicitHeight : compact.buttonSize
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.centerIn: parent
         GridLayout {
             columns: root.isVertical ? 1 : root.eyesCount
             rows: root.isVertical ? root.eyesCount : 1
@@ -152,7 +161,7 @@ Item {
             }
         }
         ColumnLayout {
-            spacing: -1
+            spacing: 0
             PlasmaComponents3.Label {
                 text: "X:" + root.cursorGlobalX
                 font.pointSize: root.fontSize
