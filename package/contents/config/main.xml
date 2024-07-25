@@ -45,6 +45,12 @@
     <entry name="fontSize" type="Int">
       <default>7</default>
     </entry>
+    <entry name="eyeColor" type="String">
+      <default>#FAFAFA</default>
+    </entry>
+    <entry name="eyeBorderColor" type="String">
+      <default>#B1B1B1</default>
+    </entry>
     <entry name="irisColor" type="String">
       <default></default>
     </entry>
@@ -52,10 +58,10 @@
       <default>#222222</default>
     </entry>
     <entry name="eyeImage" type="String">
-      <default>/home/luis/Downloads/tango-eye.png</default>
+      <default></default>
     </entry>
     <entry name="irisImage" type="String">
-      <default>/home/luis/Downloads/tango-pupil.png</default>
+      <default></default>
     </entry>
   </group>
 </kcfg>

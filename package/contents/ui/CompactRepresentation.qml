@@ -25,8 +25,8 @@ Item {
         property int borderWidth: root.eyeBorderWidth
         property real angleDeg: Math.atan2(root.cursorY - centerY , root.cursorX - centerX ) * 180 / Math.PI;
         border.width: root.eyeImage === "" ? borderWidth : 0
-        border.color: Kirigami.Theme.textColor
-        color: "transparent"
+        border.color: eyeBorderColor
+        color: eyeColor
 
         Image {
             anchors.fill: parent

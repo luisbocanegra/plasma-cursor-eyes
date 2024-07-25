@@ -21,9 +21,12 @@ KCM.SimpleKCM {
     property alias cfg_fontSize: fontSizeSpinbox.value
     property alias cfg_bgFillPanel: bgFillPanelCheckbox.checked
     property string cfg_irisColor: irisColorButton.color
-    property alias cfg_pupilColor: pupilColorButton.color
+    property string cfg_pupilColor: pupilColorButton.color
     property alias cfg_eyeImage: eyeImageTextfield.text
     property alias cfg_irisImage: irisImageTextfield.text
+
+    property string cfg_eyeColor: eyeColorButton.color
+    property string cfg_eyeBorderColor: eyeBorderColorButton.color
 
     Kirigami.FormLayout {
         id: generalPage
@@ -272,6 +275,57 @@ KCM.SimpleKCM {
             to: 100
         }
 
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Eye color:")
+            enabled: eyeImageTextfield.text === ""
+            Components.ColorButton {
+                id: eyeColorButton
+                showAlphaChannel: false
+                dialogTitle: i18n("Eye color")
+                color: cfg_eyeColor
+                onAccepted: {
+                    cfg_eyeColor = color.toString()
+                }
+            }
+            Button {
+                icon.name: "edit-undo-symbolic"
+                flat: true
+                onClicked: {
+                    cfg_eyeColor = "#FAFAFA"
+                    eyeColorButton.color = "#FAFAFA"
+                }
+                ToolTip.text: i18n("Reset to default")
+                ToolTip.visible: hovered
+                enabled: cfg_eyeColor.toUpperCase() !== "#FAFAFA"
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Eye border color:")
+            enabled: eyeImageTextfield.text === ""
+            Components.ColorButton {
+                id: eyeBorderColorButton
+                showAlphaChannel: false
+                dialogTitle: i18n("Eye color")
+                color: cfg_eyeBorderColor
+                onAccepted: {
+                    cfg_eyeBorderColor = color
+                }
+            }
+            Button {
+                icon.name: "edit-undo-symbolic"
+                flat: true
+                onClicked: {
+                    cfg_eyeBorderColor = "#B1B1B1"
+                    eyeBorderColorButton.color = "#B1B1B1"
+                }
+                ToolTip.text: i18n("Reset to default")
+                ToolTip.visible: hovered
+                enabled: cfg_eyeBorderColor.toUpperCase() !== "#B1B1B1"
+            }
+        }
+
         RowLayout {
             Kirigami.FormData.label: i18n("Iris color:")
             enabled: irisImageTextfield.text === ""
@@ -313,8 +367,8 @@ KCM.SimpleKCM {
                 icon.name: "edit-undo-symbolic"
                 flat: true
                 onClicked: {
-                    // pupilColorButton.color = "#222222"
                     cfg_pupilColor = "#222222"
+                    pupilColorButton.color = "#222222"
                 }
                 ToolTip.text: i18n("Reset to default")
                 ToolTip.visible: hovered
