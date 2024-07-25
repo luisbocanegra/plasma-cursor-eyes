@@ -10,7 +10,7 @@ Item {
     Layout.preferredWidth: Layout.minimumWidth
     Layout.preferredHeight: Layout.minimumHeight
     readonly property real containerSize: root.isVertical ? parent.width : parent.height
-    readonly property real buttonSize: Kirigami.Units.iconSizes.roundedIconSize(root.isVertical ? parent.width : parent.height) * root.eyeScaling
+    readonly property real buttonSize: (root.isVertical ? parent.width : parent.height) * root.eyeScaling
 
     property Component eyeComponent: Rectangle {
         id: eye
@@ -56,7 +56,7 @@ Item {
             width: eye.width * root.irisSize
             height: width
             radius: width / 2
-            color: Kirigami.Theme.highlightColor
+            color: root.irisColor
             
             Rectangle {
                 id: pupil
@@ -64,7 +64,7 @@ Item {
                 width: iris.width * root.pupilSize
                 height: width
                 radius: width / 2
-                color: Kirigami.Theme.backgroundColor
+                color: root.pupilColor
             }
 
             visible: root.scriptLoaded && root.serviceRunning
@@ -188,6 +188,22 @@ Item {
                     visible: root.enableDebug
                 }
             }
+
+            Rectangle {
+                anchors.fill: parent
+                border.color: "red"
+                border.width: 1
+                color: "transparent"
+                visible: root.enableDebug
+            }
         }
+
+    }
+    Rectangle {
+        anchors.fill: parent
+        border.color: "cyan"
+        border.width: 1
+        color: "transparent"
+        visible: root.enableDebug
     }
 }

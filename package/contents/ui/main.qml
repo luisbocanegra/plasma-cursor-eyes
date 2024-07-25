@@ -14,7 +14,6 @@ PlasmoidItem {
     property bool enableDebug: plasmoid.configuration.enableDebug
     property string qdbusExecutable: plasmoid.configuration.qdbusExecutable
     property string pythonExecutable: plasmoid.configuration.pythonExecutable
-    property bool bgFillPanel: true //plasmoid.configuration.bgFillPanel
     property int updatesPerSecond: plasmoid.configuration.updatesPerSecond
     property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool cursorPositionCmdRunning: false
@@ -25,13 +24,22 @@ PlasmoidItem {
     property bool scriptLoaded: false
     property bool serviceRunning: false
     property string serviceError: ""
-    property int eyesCount: 2
-    property int eyeSpacing: 4
-    property int eyeBorderWidth: 2
-    property real eyeScaling: 0.8
-    property real irisSize: 0.6 // 0.5 - 1
-    property real pupilSize: 0.4 // 0.5 - 1
-    property real fontSize: 7
+    property int eyesCount: plasmoid.configuration.eyesCount
+    property int eyeSpacing: plasmoid.configuration.eyeSpacing
+    property int eyeBorderWidth: plasmoid.configuration.eyeBorderWidth
+    property real eyeScaling: plasmoid.configuration.eyeScaling
+    property real irisSize: plasmoid.configuration.irisSize
+    property real pupilSize: plasmoid.configuration.pupilSize
+    property real fontSize: plasmoid.configuration.fontSize
+    property string irisColor: Kirigami.Theme.highlightColor
+    property string pupilColor: plasmoid.configuration.pupilColor
+
+    Binding {
+        target: root
+        property: "irisColor"
+        value: plasmoid.configuration.irisColor
+        when: plasmoid.configuration.irisColor !== ""
+    }
 
     property int cursorGlobalX: -1
     property int cursorGlobalY: -1
@@ -40,6 +48,7 @@ PlasmoidItem {
     property int cursorY: cursorLocalPoint.y
 
     property bool expanded: false
+    property bool bgFillPanel: plasmoid.configuration.bgFillPanel
     Plasmoid.constraintHints: bgFillPanel ? Plasmoid.CanFillArea : Plasmoid.NoHint
     preferredRepresentation: compactRepresentation
     compactRepresentation: CompactRepresentation {}

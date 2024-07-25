@@ -18,5 +18,35 @@
     <entry name="updatesPerSecond" type="Int">
       <default>30</default>
     </entry>
+    <entry name="bgFillPanel" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="eyesCount" type="Int">
+      <default>3</default>
+    </entry>
+    <entry name="eyeSpacing" type="Int">
+      <default>8</default>
+    </entry>
+    <entry name="eyeBorderWidth" type="Int">
+      <default>2</default>
+    </entry>
+    <entry name="eyeScaling" type="Double">
+      <default>1</default>
+    </entry>
+    <entry name="irisSize" type="Double">
+      <default>0.6</default>
+    </entry>
+    <entry name="pupilSize" type="Double">
+      <default>0.4</default>
+    </entry>
+    <entry name="fontSize" type="Int">
+      <default>7</default>
+    </entry>
+    <entry name="irisColor" type="String">
+      <default></default>
+    </entry>
+    <entry name="pupilColor" type="String">
+      <default>#222222</default>
+    </entry>
   </group>
 </kcfg>
