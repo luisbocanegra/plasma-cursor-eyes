@@ -11,20 +11,17 @@ KCM.SimpleKCM {
     property alias cfg_qdbusExecutable: qdbusExecutable.text
     property alias cfg_pythonExecutable: pythonExecutable.text
     property alias cfg_updatesPerSecond: updatesPerSecond.value
-
+    property alias cfg_showCoordinates: showCoordinatesCheckbox.checked
     property alias cfg_eyesCount: eyesCountSpinbox.value
     property alias cfg_eyeSpacing: eyeSpacingSpinbox.value
     property alias cfg_eyeBorderWidth: eyeBorderWidthSpinbox.value
     property real cfg_eyeScaling: eyeScalingField.text
     property real cfg_irisSize: irisSizeField.text
     property real cfg_pupilSize: pupilSizeField.text
-
     property alias cfg_fontSize: fontSizeSpinbox.value
     property alias cfg_bgFillPanel: bgFillPanelCheckbox.checked
-
     property string cfg_irisColor: irisColorButton.color
     property alias cfg_pupilColor: pupilColorButton.color
-
     property alias cfg_eyeImage: eyeImageTextfield.text
     property alias cfg_irisImage: irisImageTextfield.text
 
@@ -48,6 +45,11 @@ KCM.SimpleKCM {
             id: updatesPerSecond
             from: 1
             to: 60
+        }
+
+        CheckBox {
+            Kirigami.FormData.label: i18n("Show coordinates:")
+            id: showCoordinatesCheckbox
         }
 
         CheckBox {
@@ -86,8 +88,6 @@ KCM.SimpleKCM {
                 }
             }
         }
-
-
 
         RowLayout {
             Kirigami.FormData.label: i18n("Iris image:")

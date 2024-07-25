@@ -14,6 +14,7 @@ PlasmoidItem {
     property bool enableDebug: plasmoid.configuration.enableDebug
     property string qdbusExecutable: plasmoid.configuration.qdbusExecutable
     property string pythonExecutable: plasmoid.configuration.pythonExecutable
+    property bool showCoordinates: plasmoid.configuration.showCoordinates
     property int updatesPerSecond: plasmoid.configuration.updatesPerSecond
     property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool cursorPositionCmdRunning: false

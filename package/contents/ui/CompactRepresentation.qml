@@ -147,17 +147,17 @@ Item {
         id: grid
         columns: root.isVertical ? 1 : 2
         rows: root.isVertical ? 2 : 1
-        width: root.isVertical ? compact.buttonSize : implicitWidth
-        height: root.isVertical ? implicitHeight : compact.buttonSize
-        anchors.centerIn: parent
+        width: root.isVertical ? compact.containerSize : implicitWidth
+        height: root.isVertical ? implicitHeight : compact.containerSize
+        columnSpacing: root.isVertical ? 0 : root.eyeSpacing
+        rowSpacing: root.isVertical ? root.eyeSpacing : 0
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         GridLayout {
             columns: root.isVertical ? 1 : root.eyesCount
             rows: root.isVertical ? root.eyesCount : 1
-            width: parent.width
-            height: parent.height
-            columnSpacing: root.isVertical ? 0 : root.eyeSpacing
-            rowSpacing: root.isVertical ? root.eyeSpacing : 0
-            Layout.alignment: Layout.AlignVCenter
+            columnSpacing: parent.columnSpacing
+            rowSpacing: parent.rowSpacing
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Repeater {
                 model: root.eyesCount
                 Rectangle {
@@ -166,6 +166,7 @@ Item {
                     border.width: 1
                     border.color: root.enableDebug ? "red" : "transparent"
                     color: root.enableDebug ? "#3fff0000" : "transparent"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Component.onCompleted: {
                         console.log(index);
                         eyeComponent.createObject(this, {"index": index})
@@ -175,6 +176,8 @@ Item {
         }
         ColumnLayout {
             spacing: 0
+            visible: root.showCoordinates
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             PlasmaComponents3.Label {
                 text: "X:" + root.cursorGlobalX
                 font.pointSize: root.fontSize
@@ -200,14 +203,6 @@ Item {
                     color: "transparent"
                     visible: root.enableDebug
                 }
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                border.color: "red"
-                border.width: 1
-                color: "transparent"
-                visible: root.enableDebug
             }
         }
 
