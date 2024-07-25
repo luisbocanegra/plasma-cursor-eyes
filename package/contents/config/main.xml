@@ -48,5 +48,11 @@
     <entry name="pupilColor" type="String">
       <default>#222222</default>
     </entry>
+    <entry name="eyeImage" type="String">
+      <default>/home/luis/Downloads/tango-eye.png</default>
+    </entry>
+    <entry name="irisImage" type="String">
+      <default>/home/luis/Downloads/tango-pupil.png</default>
+    </entry>
   </group>
 </kcfg>

@@ -24,9 +24,15 @@ Item {
         property real centerY: (eye.y + iris.width) + offsetY
         property int borderWidth: root.eyeBorderWidth
         property real angleDeg: Math.atan2(root.cursorY - centerY , root.cursorX - centerX ) * 180 / Math.PI;
-        border.width: borderWidth
+        border.width: root.eyeImage === "" ? borderWidth : 0
         border.color: Kirigami.Theme.textColor
         color: "transparent"
+
+        Image {
+            anchors.fill: parent
+            source: root.eyeImage
+            smooth: true
+        }
 
         Rectangle {
             // DEBUG
@@ -57,7 +63,13 @@ Item {
             height: width
             radius: width / 2
             color: root.irisColor
-            
+
+            Image {
+                anchors.fill: parent
+                source: root.irisImage
+                smooth: true
+            }
+
             Rectangle {
                 id: pupil
                 anchors.centerIn: parent
@@ -65,6 +77,7 @@ Item {
                 height: width
                 radius: width / 2
                 color: root.pupilColor
+                visible: root.irisImage === ""
             }
 
             visible: root.scriptLoaded && root.serviceRunning

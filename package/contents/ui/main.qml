@@ -33,6 +33,8 @@ PlasmoidItem {
     property real fontSize: plasmoid.configuration.fontSize
     property string irisColor: Kirigami.Theme.highlightColor
     property string pupilColor: plasmoid.configuration.pupilColor
+    property string eyeImage: plasmoid.configuration.eyeImage
+    property string irisImage: plasmoid.configuration.irisImage
 
     Binding {
         target: root

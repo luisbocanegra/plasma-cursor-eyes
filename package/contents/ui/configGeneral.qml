@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Dialogs
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
@@ -23,6 +24,9 @@ KCM.SimpleKCM {
 
     property string cfg_irisColor: irisColorButton.color
     property alias cfg_pupilColor: pupilColorButton.color
+
+    property alias cfg_eyeImage: eyeImageTextfield.text
+    property alias cfg_irisImage: irisImageTextfield.text
 
     Kirigami.FormLayout {
         id: generalPage
@@ -52,6 +56,76 @@ KCM.SimpleKCM {
         }
 
         //// -------------
+        RowLayout {
+            Kirigami.FormData.label: i18n("Eye image:")
+            TextField {
+                id: eyeImageTextfield
+            }
+            Button {
+                icon.name: "edit-clear-symbolic"
+                onClicked: {
+                    cfg_eyeImage = ""
+                }
+                ToolTip.text: i18n("Clear")
+                ToolTip.visible: hovered
+                enabled: cfg_eyeImage !== ""
+            }
+            Button {
+                icon.name: "folder-image-symbolic"
+                onClicked: {
+                    eyeFileDialog.open()
+                }
+            }
+            FileDialog {
+                id: eyeFileDialog
+                fileMode : FileDialog.OpenFile
+                title: i18n("Pick a image file")
+                nameFilters: [ "PNG image (*.png)" ]
+                onAccepted: {
+                    cfg_eyeImage = eyeFileDialog.selectedFile
+                }
+            }
+        }
+
+
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Iris image:")
+            TextField {
+                id: irisImageTextfield
+            }
+            Button {
+                icon.name: "edit-clear-symbolic"
+                onClicked: {
+                    cfg_irisImage = ""
+                }
+                ToolTip.text: i18n("Clear")
+                ToolTip.visible: hovered
+                enabled: cfg_irisImage !== ""
+            }
+            Button {
+                icon.name: "folder-image-symbolic"
+                onClicked: {
+                    irisFileDialog.open()
+                }
+            }
+            FileDialog {
+                id: irisFileDialog
+                fileMode : FileDialog.OpenFile
+                title: i18n("Pick a image file")
+                nameFilters: [ "PNG image (*.png)" ]
+                onAccepted: {
+                    cfg_irisImage = irisFileDialog.selectedFile
+                }
+            }
+        }
+
+        Label {
+            text: "Images must have square aspect ratio, without paddings and transparent background"
+            wrapMode: Text.Wrap
+            Layout.maximumWidth: 300
+        }
+
         SpinBox {
             Kirigami.FormData.label: i18n("Eyes:")
             id: eyesCountSpinbox
@@ -153,6 +227,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Pupil Scaling:")
+            enabled: irisImageTextfield.text === ""
             TextField {
                 id: pupilSizeField
                 placeholderText: "0-1"
@@ -199,6 +274,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Iris color:")
+            enabled: irisImageTextfield.text === ""
             Components.ColorButton {
                 id: irisColorButton
                 showAlphaChannel: false
@@ -222,11 +298,12 @@ KCM.SimpleKCM {
         }
 
         RowLayout {
-            Kirigami.FormData.label: i18n("Iris color:")
+            Kirigami.FormData.label: i18n("Pupil color:")
+            enabled: irisImageTextfield.text === ""
             Components.ColorButton {
                 id: pupilColorButton
                 showAlphaChannel: false
-                dialogTitle: i18n("Iris color")
+                dialogTitle: i18n("Pupil color")
                 color: cfg_pupilColor
                 onAccepted: {
                     cfg_pupilColor = color
