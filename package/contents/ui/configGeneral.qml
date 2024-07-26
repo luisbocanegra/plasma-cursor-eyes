@@ -28,9 +28,62 @@ KCM.SimpleKCM {
     property string cfg_eyeColor: eyeColorButton.color
     property string cfg_eyeBorderColor: eyeBorderColorButton.color
 
+    property string themesDir: Qt.resolvedUrl("themes/")
+
+    property string cfg_theme
+    property string themeName
+
+    ListModel {
+        id: themesModel
+    }
+
+    ReadFileModel {
+        id: fileModel
+        onReady: (content) => {
+            if (content.length > 0) {
+                console.log(content);
+                try {
+                    var themes = JSON.parse(content)
+                    themesModel.append({"name": "QML"})
+                    for (let theme of themes) {
+                        themesModel.append(theme)
+                    }
+                    for (let i = 0; i < themesModel.count; i++) {
+                        let theme = themesModel.get(i)
+                        if (JSON.stringify(theme, null, null) === cfg_theme) {
+                            themeName = theme.name
+                            themesCombobox.currentIndex = i
+                            return
+                        }
+                    }
+                    themesCombobox.currentIndex = 0
+                    themeName = themesModel.get(0).name
+                } catch (e) {
+                    console.error(e, e.stack)
+                }
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        let con = fileModel.read(themesDir+"index.json")
+    }
+
     Kirigami.FormLayout {
         id: generalPage
         Layout.alignment: Qt.AlignTop
+
+        ComboBox {
+            id: themesCombobox
+            Kirigami.FormData.label: i18n("Theme:")
+            model: themesModel
+            textRole: "name"
+            onCurrentIndexChanged: {
+                let theme = themesModel.get(currentIndex)
+                cfg_theme = JSON.stringify(theme, null, null)
+                themeName = theme.name
+            }
+        }
 
         TextField {
             Kirigami.FormData.label: i18n("Qdbus 6 executable:")
@@ -62,7 +115,7 @@ KCM.SimpleKCM {
 
         //// -------------
         RowLayout {
-            Kirigami.FormData.label: i18n("Eye image:")
+            Kirigami.FormData.label: i18n("Custom eye image:")
             TextField {
                 id: eyeImageTextfield
             }
@@ -93,7 +146,7 @@ KCM.SimpleKCM {
         }
 
         RowLayout {
-            Kirigami.FormData.label: i18n("Iris image:")
+            Kirigami.FormData.label: i18n("Custom iris image:")
             TextField {
                 id: irisImageTextfield
             }
@@ -121,12 +174,6 @@ KCM.SimpleKCM {
                     cfg_irisImage = irisFileDialog.selectedFile
                 }
             }
-        }
-
-        Label {
-            text: "Images must have square aspect ratio, without paddings and transparent background"
-            wrapMode: Text.Wrap
-            Layout.maximumWidth: 300
         }
 
         SpinBox {
@@ -278,7 +325,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Eye color:")
-            enabled: eyeImageTextfield.text === ""
+            enabled: eyeImageTextfield.text === "" && themeName === "QML"
             Components.ColorButton {
                 id: eyeColorButton
                 showAlphaChannel: false
@@ -303,7 +350,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Eye border color:")
-            enabled: eyeImageTextfield.text === ""
+            enabled: eyeImageTextfield.text === "" && themeName === "QML"
             Components.ColorButton {
                 id: eyeBorderColorButton
                 showAlphaChannel: false
@@ -328,7 +375,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Iris color:")
-            enabled: irisImageTextfield.text === ""
+            enabled: irisImageTextfield.text === "" && themeName === "QML"
             Components.ColorButton {
                 id: irisColorButton
                 showAlphaChannel: false
@@ -353,7 +400,7 @@ KCM.SimpleKCM {
 
         RowLayout {
             Kirigami.FormData.label: i18n("Pupil color:")
-            enabled: irisImageTextfield.text === ""
+            enabled: irisImageTextfield.text === "" && themeName === "QML"
             Components.ColorButton {
                 id: pupilColorButton
                 showAlphaChannel: false

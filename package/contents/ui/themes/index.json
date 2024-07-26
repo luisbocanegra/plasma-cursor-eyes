@@ -1,0 +1,80 @@
+[
+    {
+        "name": "Bizarre",
+        "dir": "Bizarre",
+        "eye-pixmap": "Bizarre-eye.png",
+        "pupil-pixmap": "Bizarre-pupil.png"
+    },
+    {
+        "name": "Bloodshot",
+        "dir": "Bloodshot",
+        "eye-pixmap": "Bloodshot-eye.png",
+        "pupil-pixmap": "Bloodshot-pupil.png"
+    },
+    {
+        "name": "Brown-EyedGirl",
+        "dir": "Brown-EyedGirl",
+        "eye-pixmap": "brown-eye.png",
+        "pupil-pixmap": "brown-pupil.png"
+    },
+    {
+        "name": "Crystal",
+        "dir": "Crystal",
+        "eye-pixmap": "crystal-eye.svg",
+        "pupil-pixmap": "crystal-pupil.svg"
+    },
+    {
+        "name": "Default-Geyes",
+        "dir": "Default",
+        "eye-pixmap": "Default-eye.png",
+        "pupil-pixmap": "Default-pupil.png"
+    },
+    {
+        "name": "Default-Geyes-tiny",
+        "dir": "Default-tiny",
+        "eye-pixmap": "Default-tiny-eye.png",
+        "pupil-pixmap": "Default-tiny-pupil.png"
+    },
+    {
+        "name": "Digital",
+        "dir": "Digital",
+        "eye-pixmap": "Digital-eye.png",
+        "pupil-pixmap": "Digital-pupil.png"
+    },
+    {
+        "name": "EyelashLarge",
+        "dir": "EyelashLarge",
+        "eye-pixmap": "eye.png",
+        "pupil-pixmap": "pupil.png"
+    },
+    {
+        "name": "Green-EyedGirl",
+        "dir": "Green-EyedGirl",
+        "eye-pixmap": "green-eye.png",
+        "pupil-pixmap": "green-pupil.png"
+    },
+    {
+        "name": "Horrid",
+        "dir": "Horrid",
+        "eye-pixmap": "horrid_eye.png",
+        "pupil-pixmap": "horrid_pupil.png"
+    },
+    {
+        "name": "Pink-EyedGirl",
+        "dir": "Pink-EyedGirl",
+        "eye-pixmap": "pink-eye.png",
+        "pupil-pixmap": "pink-pupil.png"
+    },
+    {
+        "name": "PumpkinMonster",
+        "dir": "PumpkinMonster",
+        "eye-pixmap": "eye.png",
+        "pupil-pixmap": "pupil.png"
+    },
+    {
+        "name": "Tango",
+        "dir": "Tango",
+        "eye-pixmap": "tango-eye.png",
+        "pupil-pixmap": "tango-pupil.png"
+    }
+]

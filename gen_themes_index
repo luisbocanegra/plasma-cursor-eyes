@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+"""Generate index.json from theme dirs in gnome-eyes/xfce-eyes format
+
+Returns:
+    _type_: _description_
+"""
+import os
+import configparser
+import json
+import sys
+
+
+def to_int(value):
+    try:
+        return int(value)
+    except ValueError:
+        return value
+
+
+if __name__ == "__main__":
+    THEMES_DIR = "package/contents/ui/themes"
+    themes = [
+        f for f in os.listdir(THEMES_DIR) if os.path.isdir(os.path.join(THEMES_DIR, f))
+    ]
+    themes.sort()
+    out = []
+    for theme_dir in themes:
+        with open(THEMES_DIR + "/" + theme_dir + "/config", "r", encoding="utf-8") as f:
+            config_string = "[dummy_section]\n" + f.read()
+        config = configparser.ConfigParser()
+        config.read_string(config_string)
+        base = dict(config.items("dummy_section"))
+        props = {}
+        name = theme_dir
+        if name.startswith("Default"):
+            name = theme_dir.replace("Default", "Default-Geyes")
+        props["name"] = name
+        props["dir"] = theme_dir
+        for key, val in base.items():
+            # we dont use these
+            if key in ["wall-thickness", "num-eyes"]:
+                continue
+            val = val.strip('"')
+            props[key] = to_int(val)
+
+        out.append(props)
+
+    with open(THEMES_DIR + "/index.json", "w", encoding="utf-8") as f:
+        json.dump(out, f, indent=4)

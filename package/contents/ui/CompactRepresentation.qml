@@ -26,7 +26,7 @@ Item {
         property real angleDeg: Math.atan2(root.cursorY - centerY , root.cursorX - centerX ) * 180 / Math.PI;
         border.width: root.eyeImage === "" ? borderWidth : 0
         border.color: eyeBorderColor
-        color: eyeColor
+        color: root.eyeImage ? "transparent" : root.eyeColor
 
         Image {
             anchors.fill: parent
@@ -62,7 +62,7 @@ Item {
             width: eye.width * root.irisSize
             height: width
             radius: width / 2
-            color: root.irisColor
+            color: root.irisImage ? "transparent" : root.irisColor
 
             Image {
                 anchors.fill: parent
@@ -151,7 +151,7 @@ Item {
         height: root.isVertical ? implicitHeight : compact.containerSize
         columnSpacing: root.isVertical ? 0 : root.eyeSpacing
         rowSpacing: root.isVertical ? root.eyeSpacing : 0
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        anchors.centerIn: parent
         GridLayout {
             columns: root.isVertical ? 1 : root.eyesCount
             rows: root.isVertical ? root.eyesCount : 1

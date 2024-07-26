@@ -38,8 +38,34 @@ PlasmoidItem {
 
     property string irisColor: Kirigami.Theme.highlightColor
     property string pupilColor: plasmoid.configuration.pupilColor
-    property string eyeImage: plasmoid.configuration.eyeImage
-    property string irisImage: plasmoid.configuration.irisImage
+    property string themesDir: Qt.resolvedUrl("themes/")
+    property string eyeImage: {
+        if (plasmoid.configuration.eyeImage)
+            return plasmoid.configuration.eyeImage
+        let pixmap = theme["eye-pixmap"]
+        if (pixmap !== "") {
+            return themesDir + theme["dir"] + "/" + pixmap
+        }
+        return ""
+    }
+    property string irisImage: {
+        if (plasmoid.configuration.irisImage)
+            return plasmoid.configuration.irisImage
+        let pixmap = theme["pupil-pixmap"]
+        if (pixmap !== "") {
+            return themesDir + theme["dir"] + "/" + pixmap
+        }
+        return ""
+    }
+    property var theme: {
+        var out = {"name":"QML","dir":"","eye-pixmap":"","pupil-pixmap":""}
+        try {
+            out = JSON.parse(plasmoid.configuration.theme.trim())
+        } catch (e) {
+            console.error(e, e.stack)
+        }
+        return out
+    }
 
     Binding {
         target: root

@@ -1,0 +1,29 @@
+# Adding new themes
+
+Themes go inside `package/contents/ui/themes/`
+
+Theme file structure:
+
+```sh
+ThemeNameExampleDir/
+├── config
+├── Example-eye.png
+└── Example-pupil.png
+```
+
+Theme `config` file must have the names of eye and pupil images:
+
+```ini
+# config file
+eye-pixmap = "example-eye.png"
+pupil-pixmap = "example-pupil.png"
+```
+
+After adding a new theme run `./gen_themes_index` from the project directory, this will update `package/contents/ui/themes/index.json` with the new theme(s).
+
+## Acknowledgements
+
+These type of eye are grabbed from the projects:
+
+- gnome-applet and its derived mate-applet
+- Crystal theme from lxqt-plugin-qeyes
