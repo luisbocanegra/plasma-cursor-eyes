@@ -63,6 +63,7 @@ Item {
             height: width
             radius: width / 2
             color: root.irisImage ? "transparent" : root.irisColor
+            visible: root.scriptLoaded && root.serviceRunning
 
             Image {
                 anchors.fill: parent
@@ -79,8 +80,6 @@ Item {
                 color: root.pupilColor
                 visible: root.irisImage === ""
             }
-
-            visible: root.scriptLoaded && root.serviceRunning
 
             property var ps: eye.calculateIrisPosition(root.cursorX, root.cursorY, eye.x + offsetX, eye.y + offsetY)
             x: ps[0]
@@ -143,8 +142,19 @@ Item {
         }
     }
 
+    Kirigami.Icon {
+        anchors.centerIn: parent
+        width: compact.containerSize
+        height: width
+        source: "configure"
+        color: Kirigami.Theme.textColor
+        opacity: 1
+        visible: !(root.scriptLoaded && root.serviceRunning)
+    }
+
     GridLayout {
         id: grid
+        visible: root.scriptLoaded && root.serviceRunning
         columns: root.isVertical ? 1 : 2
         rows: root.isVertical ? 2 : 1
         width: root.isVertical ? compact.containerSize : implicitWidth

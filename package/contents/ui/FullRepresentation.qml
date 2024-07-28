@@ -9,12 +9,12 @@ import org.kde.kirigami as Kirigami
 
 Item {
 
-    property int preferredTextWidth: Kirigami.Units.gridUnit * 20
+    property int preferredTextWidth: Kirigami.Units.gridUnit * 18
 
-    Layout.preferredWidth: Layout.minimumWidth
-    Layout.preferredHeight: Layout.minimumHeight
     Layout.minimumWidth: mainLayout.implicitWidth + Kirigami.Units.gridUnit
     Layout.minimumHeight: mainLayout.implicitHeight + Kirigami.Units.gridUnit
+    Layout.preferredWidth: Layout.minimumWidth
+    Layout.preferredHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
     Layout.maximumHeight: Layout.minimumHeight
 
@@ -37,10 +37,21 @@ Item {
             centerIn: parent
         }
 
-        PlasmaComponents.Label {
-            font.weight: Font.DemiBold
-            color: Kirigami.Theme.neutralTextColor
-            text: "Couldn't get cursor position click to fix"
+        PlasmaComponents.Button {
+            text: "Install/Upgrade KWin Script"
+            Layout.fillWidth: true
+            visible: !(root.scriptLoaded && root.serviceRunning)
+            onClicked: {
+                runCommand.exec(root.installKwinScriptCmd)
+                runCommand.exec(root.toggleKWinScriptCmd + false)
+            }
+        }
+        PlasmaComponents.Button {
+            text: "Start/Stop KWin Script"
+            Layout.fillWidth: true
+            onClicked: {
+                runCommand.exec(root.toggleKWinScriptCmd + !root.scriptLoaded)
+            }
         }
 
         GridLayout {
@@ -48,7 +59,7 @@ Item {
             columns: 2
             rowSpacing: Kirigami.Units.mediumSpacing
             columnSpacing: Kirigami.Units.gridUnit / 2.5
-            Layout.maximumWidth: Math.min(implicitWidth, preferredTextWidth)
+            Layout.preferredWidth: preferredTextWidth
             PlasmaComponents.Label {
                 text: "KWin Script running:"
                 Layout.alignment: Qt.AlignTop|Qt.AlignRight
@@ -65,7 +76,7 @@ Item {
             }
 
             PlasmaComponents.Label {
-                text: "Service running:"
+                text: "D-Bus Service running:"
                 Layout.alignment: Qt.AlignTop|Qt.AlignRight
             }
             PlasmaComponents.Label {
@@ -89,9 +100,57 @@ Item {
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
                 color: root.cursorGlobalX !== -1 && root.cursorGlobalY !== -1
-                    ? Kirigami.Theme.positiveTextColor
+                    ? Kirigami.Theme.textColor
                     : Kirigami.Theme.negativeTextColor
+            }
+
+            PlasmaComponents.Label {
+                text: "Active window:"
+                visible: root.activeWindowResourceName
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+
+            PlasmaComponents.Label {
+                visible: root.activeWindowResourceName
+                text: root.activeWindowResourceName
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
+            }
+
+            PlasmaComponents.Label {
+                visible: root.activeWindow.caption && root.activeWindow.caption !== root.activeWindowResourceName
+                text: root.activeWindow.caption
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.Wrap
+                Layout.columnSpan: 2
+            }
+
+            PlasmaComponents.Label {
+                text: "Xwayland:"
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+
+            PlasmaComponents.Label {
+                text: root.activeWindowIsXwayland
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
                 font.weight: Font.Bold
+            }
+
+            PlasmaComponents.Label {
+                text: "Xwayland windows:"
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+
+            PlasmaComponents.Label {
+                text: root.xwaylandWindows.join("\n")
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
             }
 
             TextArea {

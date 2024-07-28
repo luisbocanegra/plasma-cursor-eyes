@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 set(PROJECT_NAME "plasma-cursor-eyes")
 project(${PROJECT_NAME})
 option(INSTALL_SCRIPT_QML "Install KWin Script" OFF)
-option(PACKAGE_SCRIPT "Package KWin Script" OFF)
+option(PACKAGE_SCRIPT_QML "Package KWin Script" OFF)
 
 set(KF6_MIN_VERSION "6.0.0")
 
@@ -23,7 +23,7 @@ if(INSTALL_SCRIPT_QML)
     kpackage_install_package(package ${PLUGIN_ID} scripts kwin)
 endif()
 
-if(PACKAGE_SCRIPT)
+if(PACKAGE_SCRIPT_QML)
     # genreate kwinscript file
     set(SCRIPT_FILE ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}-v${CUR_VERSION}-qml.kwinscript)
     add_custom_target(script_qml ALL

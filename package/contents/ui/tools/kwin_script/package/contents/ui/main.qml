@@ -13,6 +13,7 @@ Item {
     property string serviceName: "luisbocanegra.cursor.eyes"
     property string path: "/cursor"
     property string method: "save_position"
+    property string activeWindowMethod: "save_active_window"
     property var cursorPosLast: { "x": -1, "y": -1 }
     property int updatesPerSecond: KWin.readConfig("UpdatesPerSecond", 30);
     property real reloadIntervalMs: 1000 / updatesPerSecond
@@ -29,6 +30,14 @@ Item {
         path: root.path
         method: root.method
         Component.onCompleted: dbus.call()
+    }
+    DBusCall {
+        id: dbus2
+        service: serviceName
+        dbusInterface: serviceName
+        path: root.path
+        method: root.activeWindowMethod
+        Component.onCompleted: dbus2.call()
     }
     function dumpProps(obj) {
         console.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -50,8 +59,20 @@ Item {
         }
     }
 
+    Connections {
+        target: Workspace
+        onActiveWindowChanged: (activeWindow) => {
+            if (activeWindow) {
+                if (activeWindow.resourceName === "plasmashell") return
+                let window = JSON.stringify(activeWindow, null, null)
+                printLog`Active window changed: ${window}`
+                dbus2.arguments = [window]
+                dbus2.call()
+            }
+        }
+    }
+
     Timer {
-        id: debugTimer
         running: true
         repeat: true
         interval: reloadIntervalMs
@@ -60,7 +81,6 @@ Item {
             const cursorPos = Workspace.cursorPos
             if (cursorPos.x !== cursorPosLast.x || cursorPos.y !== cursorPosLast.y) {
                 cursorPosLast = { "x": cursorPos.x, "y": cursorPos.y }
-                const position_str = cursorPos.x + "," + cursorPos.y
                 printLog`Cursor position changed x:${cursorPos.x} y:${cursorPos.y}`
                 dbus.arguments = [cursorPos.x + "," + cursorPos.y]
                 dbus.call()

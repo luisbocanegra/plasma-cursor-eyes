@@ -1,16 +1,11 @@
 #!/bin/sh
 
-# Remove the build directory if it exists
 if [ -d "build" ]; then
-    rm -rf build
+  rm -rf build
 fi
 
+# install plasmoid, skip packaging
+cmake -B build -S . -DBUILD_PLUGIN=OFF -DINSTALL_SCRIPT_QML=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
-# install plasmoid only
-cmake -B build -S . -DBUILD_PLUGIN=OFF -DCMAKE_INSTALL_PREFIX=~/.local
-
-# Build the project
 cmake --build build
-
-# Install the built project
 cmake --install build

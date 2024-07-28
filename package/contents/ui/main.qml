@@ -21,7 +21,15 @@ PlasmoidItem {
     property string serviceCmd: pythonExecutable + " '" + serviceUtil + "'"
     property string serviceRunningCmd: qdbusExecutable + " luisbocanegra.cursor.eyes / org.freedesktop.DBus.Introspectable.Introspect"
     property string cursorPositionCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_position"
+    property string activeWindowCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_active_window"
+    property string xwaylandWindowsCmd: "xlsclients | awk '{print $2}'"
+    property var activeWindow: {"resourceName": "", "caption": ""}
+    property var activeWindowResourceName: activeWindow.resourceName || ""
+    property var xwaylandWindows: []
+    property bool activeWindowIsXwayland: xwaylandWindows.includes(activeWindowResourceName)
     property string scriptLoadedCmd: qdbusExecutable + " org.kde.KWin /Scripting org.kde.kwin.Scripting.isScriptLoaded luisbocanegra.cursor.eyes.kwinscript"
+    property string installKwinScriptCmd: "sh " + toolsDir + "kpackage_install_kwinscript.sh '" + toolsDir + "kwin_script/package'"
+    property string toggleKWinScriptCmd: "sh " + toolsDir + "toggle_script.sh "
     property bool scriptLoaded: false
     property bool serviceRunning: false
     property string serviceError: ""
@@ -32,10 +40,8 @@ PlasmoidItem {
     property real irisSize: plasmoid.configuration.irisSize
     property real pupilSize: plasmoid.configuration.pupilSize
     property real fontSize: plasmoid.configuration.fontSize
-
     property string eyeColor: plasmoid.configuration.eyeColor
     property string eyeBorderColor: plasmoid.configuration.eyeBorderColor
-
     property string irisColor: Kirigami.Theme.highlightColor
     property string pupilColor: plasmoid.configuration.pupilColor
     property string themesDir: Qt.resolvedUrl("themes/")
@@ -83,6 +89,7 @@ PlasmoidItem {
     property bool expanded: false
     property bool bgFillPanel: plasmoid.configuration.bgFillPanel
     Plasmoid.constraintHints: bgFillPanel ? Plasmoid.CanFillArea : Plasmoid.NoHint
+    hideOnWindowDeactivate: false
     preferredRepresentation: compactRepresentation
     compactRepresentation: CompactRepresentation {}
     fullRepresentation: FullRepresentation {}
@@ -102,7 +109,7 @@ PlasmoidItem {
         }
 
         function exec(cmd) {
-            cursorPositionCmdRunning = true
+            if(cmd === cursorPositionCmd) cursorPositionCmdRunning = true
             runCommand.connectSource(cmd)
         }
 
@@ -160,6 +167,16 @@ PlasmoidItem {
             if(cmd === serviceRunningCmd) {
                 serviceRunning = exitCode === 0
             }
+            if (cmd === activeWindowCmd) {
+                try {
+                    activeWindow = JSON.parse(stdout.trim())
+                } catch (e) {
+                    console.error(e, e.stack)
+                }
+            }
+            if(cmd === xwaylandWindowsCmd) {
+                xwaylandWindows = stdout.trim().split("\n")
+            }
         }
     }
 
@@ -186,6 +203,10 @@ PlasmoidItem {
 
     onServiceRunningChanged: {
         printLog`service running: ${serviceRunning}`
+    }
+    
+    onActiveWindowResourceNameChanged: {
+        runCommand.exec(xwaylandWindowsCmd)
     }
 
     Rectangle {
@@ -232,6 +253,15 @@ PlasmoidItem {
                 runService.exec(serviceCmd)
             }
             interval = 1000
+        }
+    }
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 500
+        onTriggered: {
+            runCommand.exec(activeWindowCmd)
         }
     }
 

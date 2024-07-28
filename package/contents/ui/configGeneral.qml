@@ -24,10 +24,8 @@ KCM.SimpleKCM {
     property string cfg_pupilColor: pupilColorButton.color
     property alias cfg_eyeImage: eyeImageTextfield.text
     property alias cfg_irisImage: irisImageTextfield.text
-
     property string cfg_eyeColor: eyeColorButton.color
     property string cfg_eyeBorderColor: eyeBorderColorButton.color
-
     property string themesDir: Qt.resolvedUrl("themes/")
 
     property string cfg_theme
@@ -73,18 +71,6 @@ KCM.SimpleKCM {
         id: generalPage
         Layout.alignment: Qt.AlignTop
 
-        ComboBox {
-            id: themesCombobox
-            Kirigami.FormData.label: i18n("Theme:")
-            model: themesModel
-            textRole: "name"
-            onCurrentIndexChanged: {
-                let theme = themesModel.get(currentIndex)
-                cfg_theme = JSON.stringify(theme, null, null)
-                themeName = theme.name
-            }
-        }
-
         TextField {
             Kirigami.FormData.label: i18n("Qdbus 6 executable:")
             id: qdbusExecutable
@@ -113,7 +99,18 @@ KCM.SimpleKCM {
             id: bgFillPanelCheckbox
         }
 
-        //// -------------
+        ComboBox {
+            id: themesCombobox
+            Kirigami.FormData.label: i18n("Theme:")
+            model: themesModel
+            textRole: "name"
+            onCurrentIndexChanged: {
+                let theme = themesModel.get(currentIndex)
+                cfg_theme = JSON.stringify(theme, null, null)
+                themeName = theme.name
+            }
+        }
+
         RowLayout {
             Kirigami.FormData.label: i18n("Custom eye image:")
             TextField {

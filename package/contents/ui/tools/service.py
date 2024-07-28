@@ -8,6 +8,7 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
+import json
 
 DBusGMainLoop(set_as_default=True)
 bus = dbus.SessionBus()
@@ -20,6 +21,7 @@ class Service(dbus.service.Object):
     def __init__(self):
         self._loop = GLib.MainLoop()
         self._cursor_pos = ""
+        self._active_window = {"resourceName": "", "caption": ""}
 
     def run(self):
         DBusGMainLoop(set_as_default=True)
@@ -33,12 +35,26 @@ class Service(dbus.service.Object):
     @dbus.service.method(SERVICE_NAME, in_signature="s")
     def save_position(self, m):
         if m != self._cursor_pos:
-            print(f"New cursor position: '{m}'")
+            # print(f"New cursor position: '{m}'")
             self._cursor_pos = m
+
+    @dbus.service.method(SERVICE_NAME, in_signature="s")
+    def save_active_window(self, m):
+        res = {}
+        try:
+            res = json.loads(m)
+        except json.JSONDecodeError:
+            pass
+        if res["resourceName"] != self._active_window["resourceName"]:
+            self._active_window = res
 
     @dbus.service.method(SERVICE_NAME, in_signature="", out_signature="s")
     def get_position(self):
         return self._cursor_pos
+
+    @dbus.service.method(SERVICE_NAME, in_signature="", out_signature="s")
+    def get_active_window(self):
+        return json.dumps(self._active_window)
 
     @dbus.service.method(SERVICE_NAME, in_signature="", out_signature="")
     def quit(self):
