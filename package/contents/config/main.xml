@@ -25,7 +25,7 @@
       <default>2</default>
     </entry>
     <entry name="eyeSpacing" type="Int">
-      <default>8</default>
+      <default>4</default>
     </entry>
     <entry name="eyeBorderWidth" type="Int">
       <default>2</default>
