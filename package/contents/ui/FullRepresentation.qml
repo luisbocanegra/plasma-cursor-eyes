@@ -11,8 +11,8 @@ Item {
 
     property int preferredTextWidth: Kirigami.Units.gridUnit * 18
 
-    Layout.minimumWidth: mainLayout.implicitWidth + Kirigami.Units.gridUnit
-    Layout.minimumHeight: mainLayout.implicitHeight + Kirigami.Units.gridUnit
+    Layout.minimumWidth: preferredTextWidth
+    Layout.minimumHeight: mainLayout.implicitHeight
     Layout.preferredWidth: Layout.minimumWidth
     Layout.preferredHeight: Layout.minimumHeight
     Layout.maximumWidth: Layout.minimumWidth
@@ -32,10 +32,7 @@ Item {
 
     ColumnLayout {
         id: mainLayout
-
-        anchors {
-            centerIn: parent
-        }
+        width: preferredTextWidth
 
         PlasmaComponents.Button {
             text: "Install/Upgrade KWin Script"
@@ -59,7 +56,6 @@ Item {
             columns: 2
             rowSpacing: Kirigami.Units.mediumSpacing
             columnSpacing: Kirigami.Units.gridUnit / 2.5
-            Layout.preferredWidth: preferredTextWidth
             PlasmaComponents.Label {
                 text: "KWin Script running:"
                 Layout.alignment: Qt.AlignTop|Qt.AlignRight
