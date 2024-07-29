@@ -8,7 +8,6 @@ import "components" as Components
 
 KCM.SimpleKCM {
     id: root
-    property alias cfg_qdbusExecutable: qdbusExecutable.text
     property alias cfg_pythonExecutable: pythonExecutable.text
     property alias cfg_updatesPerSecond: updatesPerSecond.value
     property alias cfg_showCoordinates: showCoordinatesCheckbox.checked
@@ -71,11 +70,6 @@ KCM.SimpleKCM {
         id: generalPage
         Layout.alignment: Qt.AlignTop
 
-        TextField {
-            Kirigami.FormData.label: i18n("Qdbus 6 executable:")
-            id: qdbusExecutable
-            placeholderText: qsTr("Qdbus executable e.g. qdbus-qt6, qdbus6")
-        }
         TextField {
             Kirigami.FormData.label: i18n("Python 3 executable:")
             id: pythonExecutable

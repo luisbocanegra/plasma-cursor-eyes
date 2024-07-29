@@ -4,8 +4,6 @@
  */
 
 import QtQuick
-import QtQuick.Window
-import org.kde.kirigami as Kirigami
 import org.kde.kwin
 
 Item {
@@ -13,7 +11,6 @@ Item {
     property string serviceName: "luisbocanegra.cursor.eyes"
     property string path: "/cursor"
     property string method: "save_position"
-    property string activeWindowMethod: "save_active_window"
     property var cursorPosLast: { "x": -1, "y": -1 }
     property int updatesPerSecond: KWin.readConfig("UpdatesPerSecond", 30);
     property real reloadIntervalMs: 1000 / updatesPerSecond
@@ -30,14 +27,6 @@ Item {
         path: root.path
         method: root.method
         Component.onCompleted: dbus.call()
-    }
-    DBusCall {
-        id: dbus2
-        service: serviceName
-        dbusInterface: serviceName
-        path: root.path
-        method: root.activeWindowMethod
-        Component.onCompleted: dbus2.call()
     }
     function dumpProps(obj) {
         console.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -56,19 +45,6 @@ Item {
             str += string + (values[i] !== undefined ? values[i] : '');
             });
             console.log(str);
-        }
-    }
-
-    Connections {
-        target: Workspace
-        onActiveWindowChanged: (activeWindow) => {
-            if (activeWindow) {
-                if (activeWindow.resourceName === "plasmashell") return
-                let window = JSON.stringify(activeWindow, null, null)
-                printLog`Active window changed: ${window}`
-                dbus2.arguments = [window]
-                dbus2.call()
-            }
         }
     }
 

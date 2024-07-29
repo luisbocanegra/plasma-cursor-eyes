@@ -12,22 +12,15 @@ PlasmoidItem {
     property string toolsDir: Qt.resolvedUrl("./tools").toString().substring(7) + "/"
     property string serviceUtil: toolsDir+"service.py"
     property bool enableDebug: plasmoid.configuration.enableDebug
-    property string qdbusExecutable: plasmoid.configuration.qdbusExecutable
     property string pythonExecutable: plasmoid.configuration.pythonExecutable
     property bool showCoordinates: plasmoid.configuration.showCoordinates
     property int updatesPerSecond: plasmoid.configuration.updatesPerSecond
     property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
     property bool cursorPositionCmdRunning: false
     property string serviceCmd: pythonExecutable + " '" + serviceUtil + "'"
-    property string serviceRunningCmd: qdbusExecutable + " luisbocanegra.cursor.eyes / org.freedesktop.DBus.Introspectable.Introspect"
-    property string cursorPositionCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_position"
-    property string activeWindowCmd: qdbusExecutable + " luisbocanegra.cursor.eyes /cursor get_active_window"
-    property string xwaylandWindowsCmd: "xlsclients | awk '{print $2}'"
-    property var activeWindow: {"resourceName": "", "caption": ""}
-    property var activeWindowResourceName: activeWindow.resourceName || ""
-    property var xwaylandWindows: []
-    property bool activeWindowIsXwayland: xwaylandWindows.includes(activeWindowResourceName)
-    property string scriptLoadedCmd: qdbusExecutable + " org.kde.KWin /Scripting org.kde.kwin.Scripting.isScriptLoaded luisbocanegra.cursor.eyes.kwinscript"
+    property string serviceRunningCmd: "gdbus call --session --dest luisbocanegra.cursor.eyes --object-path / --method org.freedesktop.DBus.Introspectable.Introspect"
+    property string cursorPositionCmd: "gdbus call --session --dest luisbocanegra.cursor.eyes --object-path /cursor --method luisbocanegra.cursor.eyes.get_position"
+    property string scriptLoadedCmd: "gdbus call --session --dest org.kde.KWin --object-path /Scripting --method org.kde.kwin.Scripting.isScriptLoaded luisbocanegra.cursor.eyes.kwinscript"
     property string installKwinScriptCmd: "sh " + toolsDir + "kpackage_install_kwinscript.sh '" + toolsDir + "kwin_script/package'"
     property string toggleKWinScriptCmd: "sh " + toolsDir + "toggle_script.sh "
     property bool scriptLoaded: false
@@ -153,7 +146,7 @@ PlasmoidItem {
             // console.log(stdout);
             if(cmd === cursorPositionCmd) {
                 if (stdout.length < 1) return
-                let parts = stdout.trim().split(",")
+                let parts = stdout.trim().replace(/[()']/g, "").split(",")
                 if (parts.length>1) {
                     cursorGlobalX = parseInt(parts[0])
                     cursorGlobalY = parseInt(parts[1])
@@ -161,21 +154,11 @@ PlasmoidItem {
             }
             if(cmd === scriptLoadedCmd) {
                 if (stdout.length < 1) return
-                stdout = stdout.trim()
+                stdout = stdout.trim().replace(/[()',]/g, "")
                 scriptLoaded = stdout === "true"
             }
             if(cmd === serviceRunningCmd) {
                 serviceRunning = exitCode === 0
-            }
-            if (cmd === activeWindowCmd) {
-                try {
-                    activeWindow = JSON.parse(stdout.trim())
-                } catch (e) {
-                    console.error(e, e.stack)
-                }
-            }
-            if(cmd === xwaylandWindowsCmd) {
-                xwaylandWindows = stdout.trim().split("\n")
             }
         }
     }
@@ -203,10 +186,6 @@ PlasmoidItem {
 
     onServiceRunningChanged: {
         printLog`service running: ${serviceRunning}`
-    }
-    
-    onActiveWindowResourceNameChanged: {
-        runCommand.exec(xwaylandWindowsCmd)
     }
 
     Rectangle {
@@ -253,15 +232,6 @@ PlasmoidItem {
                 runService.exec(serviceCmd)
             }
             interval = 1000
-        }
-    }
-
-    Timer {
-        running: true
-        repeat: true
-        interval: 500
-        onTriggered: {
-            runCommand.exec(activeWindowCmd)
         }
     }
 

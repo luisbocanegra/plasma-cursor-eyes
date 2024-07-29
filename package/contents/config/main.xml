@@ -9,9 +9,6 @@
     <entry name="enableDebug" type="Bool">
       <default>false</default>
     </entry>
-    <entry name="qdbusExecutable" type="String">
-      <default>qdbus6</default>
-    </entry>
     <entry name="pythonExecutable" type="String">
       <default>python3</default>
     </entry>

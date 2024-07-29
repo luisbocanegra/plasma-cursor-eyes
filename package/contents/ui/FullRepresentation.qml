@@ -100,55 +100,6 @@ Item {
                     : Kirigami.Theme.negativeTextColor
             }
 
-            PlasmaComponents.Label {
-                text: "Active window:"
-                visible: root.activeWindowResourceName
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
-            }
-
-            PlasmaComponents.Label {
-                visible: root.activeWindowResourceName
-                text: root.activeWindowResourceName
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-                wrapMode: Text.Wrap
-            }
-
-            PlasmaComponents.Label {
-                visible: root.activeWindow.caption && root.activeWindow.caption !== root.activeWindowResourceName
-                text: root.activeWindow.caption
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop|Qt.AlignHCenter
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.Wrap
-                Layout.columnSpan: 2
-            }
-
-            PlasmaComponents.Label {
-                text: "Xwayland:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
-            }
-
-            PlasmaComponents.Label {
-                text: root.activeWindowIsXwayland
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-                wrapMode: Text.Wrap
-                font.weight: Font.Bold
-            }
-
-            PlasmaComponents.Label {
-                text: "Xwayland windows:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
-            }
-
-            PlasmaComponents.Label {
-                text: root.xwaylandWindows.join("\n")
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-                wrapMode: Text.Wrap
-            }
-
             TextArea {
                 text: "'"+serviceError+"'"
                 visible: serviceError !== ""
