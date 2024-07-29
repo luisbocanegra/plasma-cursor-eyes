@@ -11,7 +11,7 @@
         "Description": "Provides cursor position to Cursor Eyes widget",
         "EnabledByDefault": true,
         "Id": "luisbocanegra.cursor.eyes.kwinscript",
-        "License": "GPL",
+        "License": "GPL-3.0",
         "Name": "Cursor Eyes (QML version)",
         "Icon": "preferences-system-windows-script-test",
         "Version": "0.1.0",

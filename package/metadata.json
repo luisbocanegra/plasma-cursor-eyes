@@ -9,7 +9,7 @@
         ],
         "BugReportUrl": "https://github.com/luisbocanegra/plasma-cursor-eyes/issues",
         "Category": "System Information",
-        "Description": "Follow mouse demo inspired by xfce4-eyes-plugin",
+        "Description": "Rolling eyes that follow your mouse pointer",
         "EnabledByDefault": false,
         "Id": "luisbocanegra.cursor.eyes",
         "License": "GPL-3.0",
