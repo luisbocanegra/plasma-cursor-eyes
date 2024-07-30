@@ -88,12 +88,12 @@ Item {
 
             Behavior on x {
                 NumberAnimation {
-                    duration: 50
+                    duration: root.animationDuration
                 }
             }
             Behavior on y {
                 NumberAnimation {
-                    duration: 50
+                    duration: root.animationDuration
                 }
             }
 

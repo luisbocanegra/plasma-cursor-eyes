@@ -26,6 +26,7 @@ KCM.SimpleKCM {
     property string cfg_eyeColor: eyeColorButton.color
     property string cfg_eyeBorderColor: eyeBorderColorButton.color
     property string themesDir: Qt.resolvedUrl("themes/")
+    property alias cfg_animationDuration: animationDurationSpinbox.value
 
     property string cfg_theme
     property string themeName
@@ -304,6 +305,13 @@ KCM.SimpleKCM {
                     }
                 }
             }
+        }
+
+        SpinBox {
+            Kirigami.FormData.label: i18n("Animation duration:")
+            id: animationDurationSpinbox
+            from: 0
+            to: 1000
         }
 
         SpinBox {

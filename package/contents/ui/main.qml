@@ -39,6 +39,7 @@ PlasmoidItem {
     property string irisColor: Kirigami.Theme.highlightColor
     property string pupilColor: plasmoid.configuration.pupilColor
     property string themesDir: Qt.resolvedUrl("themes/")
+    property int animationDuration: plasmoid.configuration.animationDuration
     property string eyeImage: {
         if (plasmoid.configuration.eyeImage)
             return plasmoid.configuration.eyeImage
