@@ -15,6 +15,7 @@ Item {
     property int updatesPerSecond: KWin.readConfig("UpdatesPerSecond", 30);
     property real reloadIntervalMs: 1000 / updatesPerSecond
     property bool enableDebug: KWin.readConfig("EnableDebug", false);
+    property bool idleMode: true
 
     Component.onCompleted: {
         printLog`Updates per second: ${updatesPerSecond} interval: ${reloadIntervalMs.toFixed(2)}`
@@ -49,17 +50,32 @@ Item {
     }
 
     Timer {
+        id: idleTimer
+        interval: 5000
+        onTriggered: {
+            idleMode = true
+        }
+    }
+
+    Timer {
         running: true
         repeat: true
-        interval: reloadIntervalMs
+        interval: 500
         onTriggered: {
-            // console.log("updating")
+            // console.log("KWIN updating", interval)
             const cursorPos = Workspace.cursorPos
             if (cursorPos.x !== cursorPosLast.x || cursorPos.y !== cursorPosLast.y) {
                 cursorPosLast = { "x": cursorPos.x, "y": cursorPos.y }
                 printLog`Cursor position changed x:${cursorPos.x} y:${cursorPos.y}`
+                interval = reloadIntervalMs
+                idleMode = false
+                idleTimer.restart()
                 dbus.arguments = [cursorPos.x + "," + cursorPos.y]
                 dbus.call()
+            } else {
+                if (idleMode) {
+                    interval = 500
+                }
             }
         }
     }

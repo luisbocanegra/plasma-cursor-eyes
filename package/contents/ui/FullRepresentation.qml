@@ -9,7 +9,7 @@ import org.kde.kirigami as Kirigami
 
 Item {
 
-    property int preferredTextWidth: Kirigami.Units.gridUnit * 18
+    property int preferredTextWidth: Kirigami.Units.gridUnit * 20
 
     Layout.minimumWidth: preferredTextWidth
     Layout.minimumHeight: mainLayout.implicitHeight
@@ -85,6 +85,56 @@ Item {
                     : Kirigami.Theme.negativeTextColor
                 font.weight: Font.Bold
             }
+            
+            PlasmaComponents.Label {
+                text: "Idle mode:"
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+            PlasmaComponents.Label {
+                text: root.idleMode
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
+                color: root.idleMode
+                    ? Kirigami.Theme.positiveTextColor
+                    : Kirigami.Theme.negativeTextColor
+                font.weight: Font.Bold
+            }
+
+            PlasmaComponents.Label {
+                text: "Update interval:"
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+            PlasmaComponents.Label {
+                text: parseFloat(root.updateInterval).toFixed(1) + "ms"
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
+                font.family: "Monospace"
+            }
+
+            PlasmaComponents.Label {
+                text: "Distance traveled:"
+                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+            }
+            PlasmaComponents.Label {
+                text: Number(parseFloat(root.distanceTraveled).toFixed(1)).toLocaleString(Qt.locale(),'f',1) + "px"
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                wrapMode: Text.Wrap
+                font.family: "Monospace"
+            }
+            Item {
+                visible: root.exceedCount > 0
+            }
+            PlasmaComponents.Label {
+                visible: root.exceedCount > 0
+                text: "+ " + Number(parseFloat(root.maxValue).toFixed(1)).toLocaleString(Qt.locale(),'g',1) + "px * " + root.exceedCount
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                font.family: "Monospace"
+                wrapMode: Text.Wrap
+            }
 
             PlasmaComponents.Label {
                 text: "Cursor position:"
@@ -98,6 +148,7 @@ Item {
                 color: root.cursorGlobalX !== -1 && root.cursorGlobalY !== -1
                     ? Kirigami.Theme.textColor
                     : Kirigami.Theme.negativeTextColor
+                font.family: "Monospace"
             }
 
             TextArea {

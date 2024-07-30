@@ -63,7 +63,8 @@ Item {
             height: width
             radius: width / 2
             color: root.irisImage ? "transparent" : root.irisColor
-            visible: root.scriptLoaded && root.serviceRunning
+            visible: root.ready
+            anchors.centerIn: root.cursorAvailable ? undefined : parent
 
             Image {
                 anchors.fill: parent
@@ -149,12 +150,12 @@ Item {
         source: "configure"
         color: Kirigami.Theme.textColor
         opacity: 1
-        visible: !(root.scriptLoaded && root.serviceRunning)
+        visible: !root.ready
     }
 
     GridLayout {
         id: grid
-        visible: root.scriptLoaded && root.serviceRunning
+        visible: root.ready
         columns: root.isVertical ? 1 : 2
         rows: root.isVertical ? 2 : 1
         width: root.isVertical ? compact.containerSize : implicitWidth

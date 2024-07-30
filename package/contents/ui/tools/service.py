@@ -20,7 +20,7 @@ PATH = "/cursor"
 class Service(dbus.service.Object):
     def __init__(self):
         self._loop = GLib.MainLoop()
-        self._cursor_pos = ""
+        self._cursor_pos = "-1,-1"
         self._active_window = {"resourceName": "", "caption": ""}
 
     def run(self):

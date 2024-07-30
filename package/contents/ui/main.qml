@@ -76,9 +76,18 @@ PlasmoidItem {
 
     property int cursorGlobalX: -1
     property int cursorGlobalY: -1
+    property int cursorGlobalXLast: -1
+    property int cursorGlobalYLast: -1
     property var cursorLocalPoint: root.mapFromGlobal(cursorGlobalX, cursorGlobalY)
     property int cursorX: cursorLocalPoint.x
     property int cursorY: cursorLocalPoint.y
+    property int cursorAvailable: cursorGlobalX !== -1 && cursorGlobalY !== -1
+    property int ready: scriptLoaded && serviceRunning
+    property bool idleMode: true
+    property real updateInterval: 500
+    property real distanceTraveled: 0
+    property real maxValue: Number.fromLocaleString(Qt.locale(),"1.7976931348623157e+308")
+    property int exceedCount: 0
 
     property bool wasExpanded
     property bool bgFillPanel: plasmoid.configuration.bgFillPanel
@@ -137,6 +146,12 @@ PlasmoidItem {
         }
     }
 
+    function getDistance(x1, y1, x2, y2) {
+        const dx = x2 - x1
+        const dy = y2 - y1
+        return Math.sqrt(dx * dx + dy * dy)
+    }
+
     Connections {
         target: runCommand
         function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
@@ -148,8 +163,31 @@ PlasmoidItem {
                 if (stdout.length < 1) return
                 let parts = stdout.trim().replace(/[()']/g, "").split(",")
                 if (parts.length>1) {
-                    cursorGlobalX = parseInt(parts[0])
-                    cursorGlobalY = parseInt(parts[1])
+                    const x = parseInt(parts[0])
+                    const y = parseInt(parts[1])
+                    if (x === -1 && y === -1) return
+                    if (x !== cursorGlobalXLast || y !== cursorGlobalYLast) {
+                        cursorGlobalXLast = x
+                        cursorGlobalYLast = y
+                        if ((cursorGlobalX !== -1 && cursorGlobalX !== -1)){
+                            let dist = getDistance(x, y, cursorGlobalX, cursorGlobalY)
+                            if (distanceTraveled + dist > maxValue) {
+                                exceedCount += 1
+                                distanceTraveled = 0
+                            } else {
+                                distanceTraveled += dist
+                            }
+                        }
+                        updateInterval = (1000 / updatesPerSecond)
+                        idleMode = false
+                        idleTimer.restart()
+                    } else {
+                        if (idleMode) {
+                            updateInterval = 500
+                        }
+                    }
+                    cursorGlobalX = x
+                    cursorGlobalY = y
                 }
             }
             if(cmd === scriptLoadedCmd) {
@@ -234,11 +272,20 @@ PlasmoidItem {
     }
 
     Timer {
-        id: runCommandTimer
+        id: idleTimer
+        interval: 5000
+        onTriggered: {
+            idleMode = true
+        }
+    }
+
+    Timer {
+        id: cursorCommandTimer
         running: scriptLoaded && serviceRunning
         repeat: true
-        interval: (1000 / updatesPerSecond)
+        interval: updateInterval
         onTriggered: {
+            // console.log("Widget updating", interval)
             if (!cursorPositionCmdRunning) runCommand.exec(cursorPositionCmd)
         }
     }
