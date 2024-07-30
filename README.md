@@ -2,11 +2,9 @@
 
 # Cursor Eyes
 
-![panel](screenshots/panel.png)
+Rolling eyes that follow your mouse pointer for the KDE Plasma Desktop inspired by [gnome-applets/geyes](https://gitlab.gnome.org/GNOME/gnome-applets/-/tree/master/gnome-applets/geyes) and derivatives.
 
-Follow mouse widget for the KDE Plasma Desktop inspired by [xfce4-eyes-plugin](https://gitlab.xfce.org/panel-plugins/xfce4-eyes-plugin). A demo of getting KWin Script output from a Plasma Widget using D-Bus and Python
-
-https://github.com/luisbocanegra/plasma-cursor-eyes/assets/15076387/e4e70877-4d5e-4ca6-b09b-1bc4b3c41480
+https://github.com/user-attachments/assets/fb58910b-ecb7-4546-8bc7-4c40216ccceb
 
 </div>
 
@@ -18,6 +16,14 @@ https://github.com/luisbocanegra/plasma-cursor-eyes/assets/15076387/e4e70877-4d5
   * Custom images
 * Fully customizable, from sizes down to the amount of eyes and spacing between them
 * Support for vertical panels
+
+<details>
+    <summary>screenshots</summary>
+
+![tooltip](screenshots/panel.png)
+![tooltip](screenshots/settings.png)
+
+</details>
 
 ## Requirements
 
