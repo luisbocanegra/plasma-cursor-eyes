@@ -10,16 +10,32 @@ https://github.com/luisbocanegra/plasma-cursor-eyes/assets/15076387/e4e70877-4d5
 
 </div>
 
-## TODO
+## Features
 
-* [ ] Vertical panel
-* [ ] Appearance customization maybe?
+* Themes
+  * QML circles with customizable colors
+  * Styles from other popular [Rolling eyes plugins](https://github.com/luisbocanegra/plasma-cursor-eyes/blob/main/package/contents/ui/themes/README.md#authors)
+  * Custom images
+* Fully customizable, from sizes down to the amount of eyes and spacing between them
+* Support for vertical panels
+
+## Requirements
+
+* Python3
+* python-gobject
+* dbus-python
+* glib2 (`gdbus`)
+* kconfig (`kwriteconfig6`) to toggle the KWin Script, or you can do it manually from *System Settings* > *Window Management* > *KWin Scripts* > *Cursor Eyes*
+* kpackage (`kpackagetool6`) to install the KWin Script from the widget, or you can install it manually following the steps below
 
 ## Installing
 
-### Requisites
-
-Make sure you have python 3, python-gobject, dbus-python, qt6-tools (for qdbus6) packages installed
+> [!IMPORTANT]
+> Depending on the hardware you may experience a increase on CPU usage when moving the cursor around while using this widget. 
+> 
+> This is due to the current implementation of the widget and the KWin script polling the widget's python D-Bus service. This will be fixed by reimplementing all (or what is possible) as a cpp plugin (no ETA)
+> 
+> It should return to *almost* normal when the cursor is not moving (idle mode). Usage can be decreased by reducing the updates per second from both widget and KWin script settings.
 
 ~~Install the widget from the KDE Store [Plasma 6 version](https://store.kde.org/p/2145723)~~ TODO
 
@@ -27,6 +43,14 @@ Make sure you have python 3, python-gobject, dbus-python, qt6-tools (for qdbus6)
 2. ~~**Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.~~ TODO
 
 ### Manual install
+
+```sh
+git clone https://github.com/luisbocanegra/plasma-cursor-eyes
+cd plasma-cursor-eyes
+./install.sh
+```
+
+**ALTERNATIVE** You can also install through the `./install-with-cmake.sh` script but requires additional dependencies (mostly intended for development/packaging)
 
 * Install dependencies (please let me know if I missed something)
 
@@ -37,22 +61,30 @@ Make sure you have python 3, python-gobject, dbus-python, qt6-tools (for qdbus6)
 * Install the plasmoid
 
   ```sh
-  ./install.sh
+  ./install-with-cmake.sh
   ```
+
+## Submitting new themes
+
+Instructions to add new themes are [here](https://github.com/luisbocanegra/plasma-cursor-eyes/blob/main/package/contents/ui/themes/README.md)
 
 ## How does it work?
 
 1. A KWin Script that reads the cursor position x times per second (default is 30)
 2. Widget starts a D-Bus service (python script) to store and return the cursor position
-3. The KWin Script sends the cursor position to the D-Bus service using `callDbus` (or `DBusCall` for the qml version)
-4. The widget gets the last saved cursor position from the running D-Bus service
+3. KWin Script sends the cursor position to the D-Bus service
+4. Widget gets the last saved cursor position from the running D-Bus service
 5. When there are multiple instances of the widget only one runs the service
 
-There are two versions of the script, one replaces the other. By default the Javascript version is what is installed and the qml one is provided mostly for demonstration purposes.
+## Similar projects
 
-## Credits & Resources
-
-* Inspired by [xfce4-eyes-plugin](https://gitlab.xfce.org/panel-plugins/xfce4-eyes-plugin) [xorg/app/xeyes](https://gitlab.freedesktop.org/xorg/app/xeyes)
-* Related topic [Determine when monitor is turned on or off via python dbus](https://discuss.kde.org/t/determine-when-monitor-is-turned-on-or-off-via-python-dbus/11980/7)
-* [jinliu/kdotool](https://github.com/jinliu/kdotool) for reading KWin script output inspiration
+* [gnome-applets/geyes](https://gitlab.gnome.org/GNOME/gnome-applets/-/tree/master/gnome-applets/geyes)
+* [xfce4-eyes-plugin](https://gitlab.xfce.org/panel-plugins/xfce4-eyes-plugin)
+* [lxqt-panel/plugin-qeyes](https://github.com/lxqt/lxqt-panel/tree/master/plugin-qeyes/)
 * [c0d3xd3v/qt-tuxeyes](https://github.com/c0d3xd3v/qt-tuxeyes)
+
+## Acknowledgements
+
+* Themes (images) sources are listed [here](https://github.com/luisbocanegra/plasma-cursor-eyes/blob/main/package/contents/ui/themes/README.md)
+* [jinliu/kdotool](https://github.com/jinliu/kdotool) for reading KWin script output inspiration
+* Related topic [Determine when monitor is turned on or off via python dbus](https://discuss.kde.org/t/determine-when-monitor-is-turned-on-or-off-via-python-dbus/11980/7)
