@@ -1,10 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasma5support as P5Support
+import org.kde.plasma.plasmoid
 
 PlasmoidItem {
     id: root
@@ -79,10 +80,9 @@ PlasmoidItem {
     property int cursorX: cursorLocalPoint.x
     property int cursorY: cursorLocalPoint.y
 
-    property bool expanded: false
+    property bool wasExpanded
     property bool bgFillPanel: plasmoid.configuration.bgFillPanel
     Plasmoid.constraintHints: bgFillPanel ? Plasmoid.CanFillArea : Plasmoid.NoHint
-    hideOnWindowDeactivate: false
     preferredRepresentation: compactRepresentation
     compactRepresentation: CompactRepresentation {}
     fullRepresentation: FullRepresentation {}
@@ -203,10 +203,8 @@ PlasmoidItem {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-        onClicked: {
-            expanded = !expanded
-            // isVertical = !isVertical
-        }
+        onPressed: wasExpanded = root.expanded
+        onClicked: root.expanded = !wasExpanded
     }
 
     function dumpProps(obj) {

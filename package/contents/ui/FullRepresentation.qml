@@ -113,10 +113,4 @@ Item {
             }
         }
     }
-    Keys.onPressed: event => {
-        if (event.key === Qt.Key_Escape) {
-            root.expanded = false;
-            event.accepted = true;
-        }
-    }
 }
