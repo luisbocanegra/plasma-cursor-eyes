@@ -37,16 +37,17 @@ https://github.com/user-attachments/assets/fb58910b-ecb7-4546-8bc7-4c40216ccceb
 ## Installing
 
 > [!IMPORTANT]
-> Depending on the hardware you may experience a increase on CPU usage when moving the cursor around while using this widget. 
-> 
+> Depending on the hardware you may experience a increase on CPU usage when moving the cursor around while using this widget.
+>
 > This is due to the current implementation of the widget and the KWin script polling the widget's python D-Bus service. This will be fixed by reimplementing all (or what is possible) as a cpp plugin (no ETA)
-> 
+>
 > It should return to *almost* normal when the cursor is not moving (idle mode). Usage can be decreased by reducing the updates per second from both widget and KWin script settings.
 
-~~Install the widget from the KDE Store [Plasma 6 version](https://store.kde.org/p/2145723)~~ TODO
+Install the widget from the KDE Store [Plasma 6 version](https://store.kde.org/p/2183752)
 
-1. ~~**Right click on the Desktop** > **Edit Mode** > **Add Widgets** > **Get New Widgets** > **Download new...**~~ TODO
-2. ~~**Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.~~ TODO
+1. **Right click on the Desktop** > **Edit Mode** > **Add Widgets** > **Get New Widgets** > **Download new...**
+2. **Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.
+3. Complete the setup by installing the KWin Script and starting it.
 
 ### Manual install
 
