@@ -1,9 +1,5 @@
 # Changelog
 
-## v1.6.0 Preset management & auto-loading
+## v0.1.0 2024-07-30
 
-### Improvements
-
-- Switched drag & drop instead of drag and click to drop
-- Drag top window on current screen instead of active window (same for all other window related shortcuts)
-- 
+- Initial version
