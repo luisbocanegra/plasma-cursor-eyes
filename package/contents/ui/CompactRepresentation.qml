@@ -18,12 +18,12 @@ Item {
         height: width
         radius: width / 2
         property int index: 0
-        property real offsetX: root.isVertical ? (containerSize - buttonSize) / 2 : (eye.width + root.eyeSpacing ) * index + 0
-        property real offsetY: root.isVertical ? (eye.width + root.eyeSpacing ) * index + 0 : (containerSize - buttonSize) / 2
+        property real offsetX: root.isVertical ? (containerSize - buttonSize) / 2 : (eye.width + root.eyeSpacing) * index + 0
+        property real offsetY: root.isVertical ? (eye.width + root.eyeSpacing) * index + 0 : (containerSize - buttonSize) / 2
         property real centerX: (eye.x + iris.width) + offsetX
         property real centerY: (eye.y + iris.width) + offsetY
         property int borderWidth: root.eyeBorderWidth
-        property real angleDeg: Math.atan2(root.cursorY - centerY , root.cursorX - centerX ) * 180 / Math.PI;
+        property real angleDeg: Math.atan2(root.cursorY - centerY, root.cursorX - centerX) * 180 / Math.PI
         border.width: root.eyeImage === "" ? borderWidth : 0
         border.color: eyeBorderColor
         color: root.eyeImage ? "transparent" : root.eyeColor
@@ -47,14 +47,14 @@ Item {
             var dx = mouseX - eyeX - eye.width / 2;
             var dy = mouseY - eyeY - eye.height / 2;
             var distance = Math.sqrt(dx * dx + dy * dy);
-            var maxDistance = (eye.width - iris.width) / 2 - eye.borderWidth
+            var maxDistance = (eye.width - iris.width) / 2 - eye.borderWidth;
             if (distance > maxDistance) {
                 dx *= maxDistance / distance;
                 dy *= maxDistance / distance;
             }
             const x = dx + eye.width / 2 - iris.width / 2;
             const y = dy + eye.height / 2 - iris.height / 2;
-            return [x,y]
+            return [x, y];
         }
 
         Rectangle {
@@ -128,9 +128,11 @@ Item {
                 Rotation {
                     origin.x: 0
                     origin.y: pointerRect.height / 2
-                    angle: Math.round(angleDeg);
+                    angle: Math.round(angleDeg)
                 },
-                Translate { x: eye.width / 2 }
+                Translate {
+                    x: eye.width / 2
+                }
             ]
         }
 
@@ -180,7 +182,9 @@ Item {
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Component.onCompleted: {
                         console.log(index);
-                        eyeComponent.createObject(this, {"index": index})
+                        eyeComponent.createObject(this, {
+                            "index": index
+                        });
                     }
                 }
             }
@@ -216,7 +220,6 @@ Item {
                 }
             }
         }
-
     }
     Rectangle {
         anchors.fill: parent

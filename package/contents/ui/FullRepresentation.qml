@@ -39,15 +39,15 @@ Item {
             Layout.fillWidth: true
             visible: !(root.scriptLoaded && root.serviceRunning)
             onClicked: {
-                runCommand.exec(root.installKwinScriptCmd)
-                runCommand.exec(root.toggleKWinScriptCmd + false)
+                runCommand.exec(root.installKwinScriptCmd);
+                runCommand.exec(root.toggleKWinScriptCmd + false);
             }
         }
         PlasmaComponents.Button {
             text: "Start/Stop KWin Script"
             Layout.fillWidth: true
             onClicked: {
-                runCommand.exec(root.toggleKWinScriptCmd + !root.scriptLoaded)
+                runCommand.exec(root.toggleKWinScriptCmd + !root.scriptLoaded);
             }
         }
 
@@ -58,52 +58,46 @@ Item {
             columnSpacing: Kirigami.Units.gridUnit / 2.5
             PlasmaComponents.Label {
                 text: "KWin Script running:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
                 text: scriptLoaded
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
-                color: scriptLoaded
-                    ? Kirigami.Theme.positiveTextColor
-                    : Kirigami.Theme.negativeTextColor
+                color: scriptLoaded ? Kirigami.Theme.positiveTextColor : Kirigami.Theme.negativeTextColor
                 font.weight: Font.Bold
             }
 
             PlasmaComponents.Label {
                 text: "D-Bus Service running:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
                 text: serviceRunning
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
-                color: serviceRunning
-                    ? Kirigami.Theme.positiveTextColor
-                    : Kirigami.Theme.negativeTextColor
+                color: serviceRunning ? Kirigami.Theme.positiveTextColor : Kirigami.Theme.negativeTextColor
                 font.weight: Font.Bold
             }
-            
+
             PlasmaComponents.Label {
                 text: "Idle mode:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
                 text: root.idleMode
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
-                color: root.idleMode
-                    ? Kirigami.Theme.positiveTextColor
-                    : Kirigami.Theme.negativeTextColor
+                color: root.idleMode ? Kirigami.Theme.positiveTextColor : Kirigami.Theme.negativeTextColor
                 font.weight: Font.Bold
             }
 
             PlasmaComponents.Label {
                 text: "Update interval:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
                 text: parseFloat(root.updateInterval).toFixed(1) + "ms"
@@ -115,10 +109,10 @@ Item {
 
             PlasmaComponents.Label {
                 text: "Distance traveled:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
-                text: Number(parseFloat(root.distanceTraveled).toFixed(1)).toLocaleString(Qt.locale(),'f',1) + "px"
+                text: Number(parseFloat(root.distanceTraveled).toFixed(1)).toLocaleString(Qt.locale(), 'f', 1) + "px"
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
@@ -129,7 +123,7 @@ Item {
             }
             PlasmaComponents.Label {
                 visible: root.exceedCount > 0
-                text: "+ " + Number(parseFloat(root.maxValue).toFixed(1)).toLocaleString(Qt.locale(),'g',1) + "px * " + root.exceedCount
+                text: "+ " + Number(parseFloat(root.maxValue).toFixed(1)).toLocaleString(Qt.locale(), 'g', 1) + "px * " + root.exceedCount
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 font.family: "Monospace"
@@ -138,21 +132,19 @@ Item {
 
             PlasmaComponents.Label {
                 text: "Cursor position:"
-                Layout.alignment: Qt.AlignTop|Qt.AlignRight
+                Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
                 text: "X:" + root.cursorGlobalX + " Y:" + root.cursorGlobalY
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
-                color: root.cursorGlobalX !== -1 && root.cursorGlobalY !== -1
-                    ? Kirigami.Theme.textColor
-                    : Kirigami.Theme.negativeTextColor
+                color: root.cursorGlobalX !== -1 && root.cursorGlobalY !== -1 ? Kirigami.Theme.textColor : Kirigami.Theme.negativeTextColor
                 font.family: "Monospace"
             }
 
             TextArea {
-                text: "'"+serviceError+"'"
+                text: "'" + serviceError + "'"
                 visible: serviceError !== ""
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop

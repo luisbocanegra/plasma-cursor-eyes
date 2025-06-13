@@ -37,34 +37,36 @@ KCM.SimpleKCM {
 
     ReadFileModel {
         id: fileModel
-        onReady: (content) => {
+        onReady: content => {
             if (content.length > 0) {
                 console.log(content);
                 try {
-                    var themes = JSON.parse(content)
-                    themesModel.append({"name": "QML"})
+                    var themes = JSON.parse(content);
+                    themesModel.append({
+                        "name": "QML"
+                    });
                     for (let theme of themes) {
-                        themesModel.append(theme)
+                        themesModel.append(theme);
                     }
                     for (let i = 0; i < themesModel.count; i++) {
-                        let theme = themesModel.get(i)
+                        let theme = themesModel.get(i);
                         if (JSON.stringify(theme, null, null) === cfg_theme) {
-                            themeName = theme.name
-                            themesCombobox.currentIndex = i
-                            return
+                            themeName = theme.name;
+                            themesCombobox.currentIndex = i;
+                            return;
                         }
                     }
-                    themesCombobox.currentIndex = 0
-                    themeName = themesModel.get(0).name
+                    themesCombobox.currentIndex = 0;
+                    themeName = themesModel.get(0).name;
                 } catch (e) {
-                    console.error(e, e.stack)
+                    console.error(e, e.stack);
                 }
             }
         }
     }
 
     Component.onCompleted: {
-        let con = fileModel.read(themesDir+"index.json")
+        let con = fileModel.read(themesDir + "index.json");
     }
 
     Kirigami.FormLayout {
@@ -72,26 +74,26 @@ KCM.SimpleKCM {
         Layout.alignment: Qt.AlignTop
 
         TextField {
-            Kirigami.FormData.label: i18n("Python 3 executable:")
             id: pythonExecutable
+            Kirigami.FormData.label: i18n("Python 3 executable:")
             placeholderText: qsTr("Python executable e.g. python, python3")
         }
 
         SpinBox {
-            Kirigami.FormData.label: i18n("Updates per second:")
             id: updatesPerSecond
+            Kirigami.FormData.label: i18n("Updates per second:")
             from: 1
             to: 60
         }
 
         CheckBox {
-            Kirigami.FormData.label: i18n("Show coordinates:")
             id: showCoordinatesCheckbox
+            Kirigami.FormData.label: i18n("Show coordinates:")
         }
 
         CheckBox {
-            Kirigami.FormData.label: i18n("Fill panel:")
             id: bgFillPanelCheckbox
+            Kirigami.FormData.label: i18n("Fill panel:")
         }
 
         ComboBox {
@@ -100,9 +102,9 @@ KCM.SimpleKCM {
             model: themesModel
             textRole: "name"
             onCurrentIndexChanged: {
-                let theme = themesModel.get(currentIndex)
-                cfg_theme = JSON.stringify(theme, null, null)
-                themeName = theme.name
+                let theme = themesModel.get(currentIndex);
+                cfg_theme = JSON.stringify(theme, null, null);
+                themeName = theme.name;
             }
         }
 
@@ -114,7 +116,7 @@ KCM.SimpleKCM {
             Button {
                 icon.name: "edit-clear-symbolic"
                 onClicked: {
-                    cfg_eyeImage = ""
+                    cfg_eyeImage = "";
                 }
                 ToolTip.text: i18n("Clear")
                 ToolTip.visible: hovered
@@ -123,16 +125,16 @@ KCM.SimpleKCM {
             Button {
                 icon.name: "folder-image-symbolic"
                 onClicked: {
-                    eyeFileDialog.open()
+                    eyeFileDialog.open();
                 }
             }
             FileDialog {
                 id: eyeFileDialog
-                fileMode : FileDialog.OpenFile
+                fileMode: FileDialog.OpenFile
                 title: i18n("Pick a image file")
-                nameFilters: [ "PNG image (*.png)" ]
+                nameFilters: ["PNG image (*.png)"]
                 onAccepted: {
-                    cfg_eyeImage = eyeFileDialog.selectedFile
+                    cfg_eyeImage = eyeFileDialog.selectedFile;
                 }
             }
         }
@@ -145,7 +147,7 @@ KCM.SimpleKCM {
             Button {
                 icon.name: "edit-clear-symbolic"
                 onClicked: {
-                    cfg_irisImage = ""
+                    cfg_irisImage = "";
                 }
                 ToolTip.text: i18n("Clear")
                 ToolTip.visible: hovered
@@ -154,40 +156,39 @@ KCM.SimpleKCM {
             Button {
                 icon.name: "folder-image-symbolic"
                 onClicked: {
-                    irisFileDialog.open()
+                    irisFileDialog.open();
                 }
             }
             FileDialog {
                 id: irisFileDialog
-                fileMode : FileDialog.OpenFile
+                fileMode: FileDialog.OpenFile
                 title: i18n("Pick a image file")
-                nameFilters: [ "PNG image (*.png)" ]
+                nameFilters: ["PNG image (*.png)"]
                 onAccepted: {
-                    cfg_irisImage = irisFileDialog.selectedFile
+                    cfg_irisImage = irisFileDialog.selectedFile;
                 }
             }
         }
 
         SpinBox {
-            Kirigami.FormData.label: i18n("Eyes:")
             id: eyesCountSpinbox
+            Kirigami.FormData.label: i18n("Eyes:")
             from: 0
             to: 9
         }
         SpinBox {
-            Kirigami.FormData.label: i18n("Spacing:")
             id: eyeSpacingSpinbox
+            Kirigami.FormData.label: i18n("Spacing:")
             from: 0
             to: 100
         }
 
         SpinBox {
-            Kirigami.FormData.label: i18n("Border width:")
             id: eyeBorderWidthSpinbox
+            Kirigami.FormData.label: i18n("Border width:")
             from: 0
             to: 100
         }
-
 
         RowLayout {
             Kirigami.FormData.label: i18n("Eye Scaling:")
@@ -205,8 +206,8 @@ KCM.SimpleKCM {
                 }
 
                 onTextChanged: {
-                    const newVal = parseFloat(text)
-                    cfg_eyeScaling = isNaN(newVal) ? 0 : newVal
+                    const newVal = parseFloat(text);
+                    cfg_eyeScaling = isNaN(newVal) ? 0 : newVal;
                 }
 
                 Components.ValueMouseControl {
@@ -222,7 +223,7 @@ KCM.SimpleKCM {
                     stepSize: 0.05
                     value: cfg_eyeScaling
                     onValueChanged: {
-                        cfg_eyeScaling = parseFloat(value)
+                        cfg_eyeScaling = parseFloat(value);
                     }
                 }
             }
@@ -244,8 +245,8 @@ KCM.SimpleKCM {
                 }
 
                 onTextChanged: {
-                    const newVal = parseFloat(text)
-                    cfg_irisSize = isNaN(newVal) ? 0 : newVal
+                    const newVal = parseFloat(text);
+                    cfg_irisSize = isNaN(newVal) ? 0 : newVal;
                 }
 
                 Components.ValueMouseControl {
@@ -261,7 +262,7 @@ KCM.SimpleKCM {
                     stepSize: 0.05
                     value: cfg_irisSize
                     onValueChanged: {
-                        cfg_irisSize = parseFloat(value)
+                        cfg_irisSize = parseFloat(value);
                     }
                 }
             }
@@ -284,8 +285,8 @@ KCM.SimpleKCM {
                 }
 
                 onTextChanged: {
-                    const newVal = parseFloat(text)
-                    cfg_pupilSize = isNaN(newVal) ? 0 : newVal
+                    const newVal = parseFloat(text);
+                    cfg_pupilSize = isNaN(newVal) ? 0 : newVal;
                 }
 
                 Components.ValueMouseControl {
@@ -301,26 +302,25 @@ KCM.SimpleKCM {
                     stepSize: 0.05
                     value: cfg_pupilSize
                     onValueChanged: {
-                        cfg_pupilSize = parseFloat(value)
+                        cfg_pupilSize = parseFloat(value);
                     }
                 }
             }
         }
 
         SpinBox {
-            Kirigami.FormData.label: i18n("Animation duration:")
             id: animationDurationSpinbox
+            Kirigami.FormData.label: i18n("Animation duration:")
             from: 0
             to: 1000
         }
 
         SpinBox {
-            Kirigami.FormData.label: i18n("Text size:")
             id: fontSizeSpinbox
+            Kirigami.FormData.label: i18n("Text size:")
             from: 0
             to: 100
         }
-
 
         RowLayout {
             Kirigami.FormData.label: i18n("Eye color:")
@@ -331,15 +331,15 @@ KCM.SimpleKCM {
                 dialogTitle: i18n("Eye color")
                 color: cfg_eyeColor
                 onAccepted: {
-                    cfg_eyeColor = color.toString()
+                    cfg_eyeColor = color.toString();
                 }
             }
             Button {
                 icon.name: "edit-undo-symbolic"
                 flat: true
                 onClicked: {
-                    cfg_eyeColor = "#FAFAFA"
-                    eyeColorButton.color = "#FAFAFA"
+                    cfg_eyeColor = "#FAFAFA";
+                    eyeColorButton.color = "#FAFAFA";
                 }
                 ToolTip.text: i18n("Reset to default")
                 ToolTip.visible: hovered
@@ -356,15 +356,15 @@ KCM.SimpleKCM {
                 dialogTitle: i18n("Eye color")
                 color: cfg_eyeBorderColor
                 onAccepted: {
-                    cfg_eyeBorderColor = color
+                    cfg_eyeBorderColor = color;
                 }
             }
             Button {
                 icon.name: "edit-undo-symbolic"
                 flat: true
                 onClicked: {
-                    cfg_eyeBorderColor = "#B1B1B1"
-                    eyeBorderColorButton.color = "#B1B1B1"
+                    cfg_eyeBorderColor = "#B1B1B1";
+                    eyeBorderColorButton.color = "#B1B1B1";
                 }
                 ToolTip.text: i18n("Reset to default")
                 ToolTip.visible: hovered
@@ -381,15 +381,15 @@ KCM.SimpleKCM {
                 dialogTitle: i18n("Iris color")
                 color: cfg_irisColor !== "" ? cfg_irisColor : Kirigami.Theme.highlightColor
                 onAccepted: {
-                    cfg_irisColor = color
+                    cfg_irisColor = color;
                 }
             }
             Button {
                 icon.name: "edit-undo-symbolic"
                 flat: true
                 onClicked: {
-                    cfg_irisColor = ""
-                    irisColorButton.color = Kirigami.Theme.highlightColor
+                    cfg_irisColor = "";
+                    irisColorButton.color = Kirigami.Theme.highlightColor;
                 }
                 ToolTip.text: i18n("Reset to default")
                 ToolTip.visible: hovered
@@ -406,22 +406,20 @@ KCM.SimpleKCM {
                 dialogTitle: i18n("Pupil color")
                 color: cfg_pupilColor
                 onAccepted: {
-                    cfg_pupilColor = color
+                    cfg_pupilColor = color;
                 }
             }
             Button {
                 icon.name: "edit-undo-symbolic"
                 flat: true
                 onClicked: {
-                    cfg_pupilColor = "#222222"
-                    pupilColorButton.color = "#222222"
+                    cfg_pupilColor = "#222222";
+                    pupilColorButton.color = "#222222";
                 }
                 ToolTip.text: i18n("Reset to default")
                 ToolTip.visible: hovered
                 enabled: cfg_pupilColor !== "#222222"
             }
         }
-
     }
 }
-
