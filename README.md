@@ -4,7 +4,7 @@
 
 Rolling eyes that follow your mouse pointer for the KDE Plasma Desktop inspired by [gnome-applets/geyes](https://gitlab.gnome.org/GNOME/gnome-applets/-/tree/master/gnome-applets/geyes) and derivatives.
 
-https://github.com/user-attachments/assets/fb58910b-ecb7-4546-8bc7-4c40216ccceb
+<https://github.com/user-attachments/assets/fb58910b-ecb7-4546-8bc7-4c40216ccceb>
 
 </div>
 
@@ -47,7 +47,10 @@ Install the widget from the KDE Store [Plasma 6 version](https://store.kde.org/p
 
 1. **Right click on the Desktop** > **Edit Mode** > **Add Widgets** > **Get New Widgets** > **Download new...**
 2. **Search** for "**Cursor Eyes**", install and add it to your Panel/Desktop.
-3. Complete the setup by installing the KWin Script and starting it.
+
+    ***Note:** There will be an additional entry called **Cursor Eyes (KWin Script)**, ignore it and proceed to the next step*
+
+3. Click on the widget to complete the setup by installing the KWin Script and starting it.
 
 ### Manual install
 

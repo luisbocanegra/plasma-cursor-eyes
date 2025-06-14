@@ -12,7 +12,7 @@
         "EnabledByDefault": true,
         "Id": "luisbocanegra.cursor.eyes.kwinscript",
         "License": "GPL-3.0",
-        "Name": "Cursor Eyes (QML version)",
+        "Name": "Cursor Eyes (KWin Script)",
         "Icon": "preferences-system-windows-script-test",
         "Version": "0.1.0",
         "Website": "https://github.com/luisbocanegra/plasma-cursor-eyes"
