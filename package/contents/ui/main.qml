@@ -17,14 +17,11 @@ PlasmoidItem {
     property bool showCoordinates: plasmoid.configuration.showCoordinates
     property int updatesPerSecond: plasmoid.configuration.updatesPerSecond
     property bool onDesktop: plasmoid.location === PlasmaCore.Types.Floating
-    property bool cursorPositionCmdRunning: false
-    property string serviceCmd: pythonExecutable + " '" + serviceUtil + "'"
-    property string serviceRunningCmd: "gdbus call --session --dest luisbocanegra.cursor.eyes --object-path / --method org.freedesktop.DBus.Introspectable.Introspect"
-    property string cursorPositionCmd: "gdbus call --session --dest luisbocanegra.cursor.eyes --object-path /cursor --method luisbocanegra.cursor.eyes.get_position"
-    property string scriptLoadedCmd: "gdbus call --session --dest org.kde.KWin --object-path /Scripting --method org.kde.kwin.Scripting.isScriptLoaded luisbocanegra.cursor.eyes.kwinscript"
+    property bool dbusCursorPositionRunning: false
+    property string dbusServiceCmd: pythonExecutable + " '" + serviceUtil + "'"
     property string installKwinScriptCmd: "sh " + toolsDir + "kpackage_install_kwinscript.sh '" + toolsDir + "kwin_script/package'"
     property string toggleKWinScriptCmd: "sh " + toolsDir + "toggle_script.sh "
-    property bool scriptLoaded: false
+    property bool isKWinScriptLoaded: false
     property bool serviceRunning: false
     property string serviceError: ""
     property int eyesCount: plasmoid.configuration.eyesCount
@@ -88,7 +85,7 @@ PlasmoidItem {
     property int cursorX: cursorLocalPoint.x
     property int cursorY: cursorLocalPoint.y
     property int cursorAvailable: cursorGlobalX !== -1 && cursorGlobalY !== -1
-    property int ready: scriptLoaded && serviceRunning
+    property int ready: isKWinScriptLoaded && serviceRunning
     property bool idleMode: true
     property real updateInterval: 500
     property real distanceTraveled: 0
@@ -102,53 +99,39 @@ PlasmoidItem {
     compactRepresentation: CompactRepresentation {}
     fullRepresentation: FullRepresentation {}
 
-    P5Support.DataSource {
+    // gdbus call --session --dest luisbocanegra.cursor.eyes --object-path / --method org.freedesktop.DBus.Introspectable.Introspect
+    DBusMethodCall {
+        id: dbusServiceRunning
+        service: "luisbocanegra.cursor.eyes"
+        objectPath: "/"
+        iface: "org.freedesktop.DBus.Introspectable"
+        method: "Introspect"
+    }
+    // gdbus call --session --dest luisbocanegra.cursor.eyes --object-path /cursor --method luisbocanegra.cursor.eyes.get_position
+    DBusMethodCall {
+        id: dbusCursorPosition
+        service: "luisbocanegra.cursor.eyes"
+        objectPath: "/cursor"
+        iface: service
+        method: "get_position"
+    }
+    // gdbus call --session --dest org.kde.KWin --object-path /Scripting --method org.kde.kwin.Scripting.isScriptLoaded luisbocanegra.cursor.eyes.kwinscript
+    DBusMethodCall {
+        id: dbusKWinScriptLoaded
+        service: "org.kde.KWin"
+        objectPath: "/Scripting"
+        iface: "org.kde.kwin.Scripting"
+        method: "isScriptLoaded"
+        arguments: ["luisbocanegra.cursor.eyes.kwinscript"]
+    }
+
+    RunCommand {
         id: runCommand
-        engine: "executable"
-        connectedSources: []
-
-        onNewData: function (source, data) {
-            var exitCode = data["exit code"];
-            var exitStatus = data["exit status"];
-            var stdout = data["stdout"];
-            var stderr = data["stderr"];
-            exited(source, exitCode, exitStatus, stdout, stderr);
-            disconnectSource(source);
-        }
-
-        function exec(cmd) {
-            if (cmd === cursorPositionCmd)
-                cursorPositionCmdRunning = true;
-            runCommand.connectSource(cmd);
-        }
-
-        signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
     }
 
-    P5Support.DataSource {
+    RunCommand {
         id: runService
-        engine: "executable"
-        connectedSources: []
-
-        onNewData: function (source, data) {
-            var exitCode = data["exit code"];
-            var exitStatus = data["exit status"];
-            var stdout = data["stdout"];
-            var stderr = data["stderr"];
-            exited(source, exitCode, exitStatus, stdout, stderr);
-            disconnectSource(source);
-        }
-
-        function exec(cmd) {
-            runService.connectSource(cmd);
-        }
-
-        signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
-    }
-
-    Connections {
-        target: runService
-        function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
+        onExited: (cmd, exitCode, exitStatus, stdout, stderr) => {
             serviceError = (exitCode !== 0) ? stderr.trim() : "";
         }
     }
@@ -159,81 +142,26 @@ PlasmoidItem {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    Connections {
-        target: runCommand
-        function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
-            cursorPositionCmdRunning = false;
-            // console.log(cmd);
-            // if (exitCode!==0) return
-            // console.log(stdout);
-            if (cmd === cursorPositionCmd) {
-                if (stdout.length < 1)
-                    return;
-                let parts = stdout.trim().replace(/[()']/g, "").split(",");
-                if (parts.length > 1) {
-                    const x = parseInt(parts[0]);
-                    const y = parseInt(parts[1]);
-                    if (x === -1 && y === -1)
-                        return;
-                    if (x !== cursorGlobalXLast || y !== cursorGlobalYLast) {
-                        cursorGlobalXLast = x;
-                        cursorGlobalYLast = y;
-                        if ((cursorGlobalX !== -1 && cursorGlobalX !== -1)) {
-                            let dist = getDistance(x, y, cursorGlobalX, cursorGlobalY);
-                            if (distanceTraveled + dist > maxValue) {
-                                exceedCount += 1;
-                                distanceTraveled = 0;
-                            } else {
-                                distanceTraveled += dist;
-                            }
-                        }
-                        updateInterval = (1000 / updatesPerSecond);
-                        idleMode = false;
-                        idleTimer.restart();
-                    } else {
-                        if (idleMode) {
-                            updateInterval = 500;
-                        }
-                    }
-                    cursorGlobalX = x;
-                    cursorGlobalY = y;
-                }
-            }
-            if (cmd === scriptLoadedCmd) {
-                if (stdout.length < 1)
-                    return;
-                stdout = stdout.trim().replace(/[()',]/g, "");
-                scriptLoaded = stdout === "true";
-            }
-            if (cmd === serviceRunningCmd) {
-                serviceRunning = exitCode === 0;
-            }
-        }
-    }
-
-    function printLog(strings, ...values) {
+    function printLog(msg) {
         if (enableDebug) {
             let str = 'CURSOR_EYES_WIDGET: ';
-            strings.forEach((string, i) => {
-                str += string + (values[i] !== undefined ? values[i] : '');
-            });
-            console.log(str);
+            console.log(str + msg);
         }
     }
 
     onCursorXChanged: {
-        printLog`Cursor position x:${cursorX} y:${cursorY}`;
+        printLog(`Cursor position x:${cursorX} y:${cursorY}`);
     }
     onCursorYChanged: {
-        printLog`Cursor position x:${cursorX} y:${cursorY}`;
+        printLog(`Cursor position x:${cursorX} y:${cursorY}`);
     }
 
-    onScriptLoadedChanged: {
-        printLog`KWin script loaded: ${scriptLoaded}`;
+    onIsKWinScriptLoadedChanged: {
+        printLog(`KWin script loaded: ${isKWinScriptLoaded}`);
     }
 
     onServiceRunningChanged: {
-        printLog`service running: ${serviceRunning}`;
+        printLog(`service running: ${serviceRunning}`);
     }
 
     Rectangle {
@@ -268,17 +196,23 @@ PlasmoidItem {
 
     Timer {
         id: initTimer
-        running: false
+        running: true
         repeat: true
-        interval: 1
+        triggeredOnStart: true
+        interval: 1000
         onTriggered: {
-            runCommand.exec(scriptLoadedCmd);
-            runCommand.exec(serviceRunningCmd);
-            if (scriptLoaded && !serviceRunning) {
-                printLog`starting service: ${serviceCmd}`;
-                runService.exec(serviceCmd);
+            dbusKWinScriptLoaded.call(reply => {
+                if (!reply.isError && reply?.isValid) {
+                    root.isKWinScriptLoaded = reply.value.toString().trim() === "true";
+                }
+            });
+            dbusServiceRunning.call(reply => {
+                root.serviceRunning = reply.isValid;
+            });
+            if (root.isKWinScriptLoaded && !root.serviceRunning) {
+                root.printLog(`starting service: ${root.dbusServiceCmd}`);
+                runService.run(root.dbusServiceCmd);
             }
-            interval = 1000;
         }
     }
 
@@ -292,17 +226,49 @@ PlasmoidItem {
 
     Timer {
         id: cursorCommandTimer
-        running: scriptLoaded && serviceRunning
+        running: root.isKWinScriptLoaded && root.serviceRunning
         repeat: true
-        interval: updateInterval
+        interval: root.updateInterval
         onTriggered: {
-            // console.log("Widget updating", interval)
-            if (!cursorPositionCmdRunning)
-                runCommand.exec(cursorPositionCmd);
+            if (!root.dbusCursorPositionRunning) {
+                root.dbusCursorPositionRunning = true;
+                dbusCursorPosition.call(reply => {
+                    root.dbusCursorPositionRunning = false;
+                    if (reply?.isError && !reply.isValid)
+                        return;
+                    if (reply.value.length < 1)
+                        return;
+                    let parts = reply.value.toString().trim().split(",");
+                    if (parts.length < 1)
+                        return;
+                    const x = parseInt(parts[0]);
+                    const y = parseInt(parts[1]);
+                    if (x === -1 && y === -1)
+                        return;
+                    if (x !== cursorGlobalXLast || y !== cursorGlobalYLast) {
+                        cursorGlobalXLast = x;
+                        cursorGlobalYLast = y;
+                        if ((cursorGlobalX !== -1 && cursorGlobalX !== -1)) {
+                            let dist = getDistance(x, y, cursorGlobalX, cursorGlobalY);
+                            if (distanceTraveled + dist > maxValue) {
+                                exceedCount += 1;
+                                distanceTraveled = 0;
+                            } else {
+                                distanceTraveled += dist;
+                            }
+                        }
+                        updateInterval = (1000 / updatesPerSecond);
+                        idleMode = false;
+                        idleTimer.restart();
+                    } else {
+                        if (idleMode) {
+                            updateInterval = 500;
+                        }
+                    }
+                    cursorGlobalX = x;
+                    cursorGlobalY = y;
+                });
+            }
         }
-    }
-
-    Component.onCompleted: {
-        initTimer.start();
     }
 }

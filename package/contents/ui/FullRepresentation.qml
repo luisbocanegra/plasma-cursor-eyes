@@ -37,17 +37,17 @@ Item {
         PlasmaComponents.Button {
             text: "Install/Upgrade KWin Script"
             Layout.fillWidth: true
-            visible: !(root.scriptLoaded && root.serviceRunning)
+            visible: !(root.isKWinScriptLoaded && root.serviceRunning)
             onClicked: {
-                runCommand.exec(root.installKwinScriptCmd);
-                runCommand.exec(root.toggleKWinScriptCmd + false);
+                runCommand.run(root.installKwinScriptCmd);
+                runCommand.run(root.toggleKWinScriptCmd + false);
             }
         }
         PlasmaComponents.Button {
             text: "Start/Stop KWin Script"
             Layout.fillWidth: true
             onClicked: {
-                runCommand.exec(root.toggleKWinScriptCmd + !root.scriptLoaded);
+                runCommand.run(root.toggleKWinScriptCmd + !root.isKWinScriptLoaded);
             }
         }
 
@@ -61,11 +61,11 @@ Item {
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
             }
             PlasmaComponents.Label {
-                text: scriptLoaded
+                text: isKWinScriptLoaded
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 wrapMode: Text.Wrap
-                color: scriptLoaded ? Kirigami.Theme.positiveTextColor : Kirigami.Theme.negativeTextColor
+                color: isKWinScriptLoaded ? Kirigami.Theme.positiveTextColor : Kirigami.Theme.negativeTextColor
                 font.weight: Font.Bold
             }
 
