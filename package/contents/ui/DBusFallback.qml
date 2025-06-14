@@ -2,34 +2,26 @@ pragma ComponentBehavior: Bound
 pragma ValueTypeBehavior: Addressable
 
 import QtQuick
+import "code/utils.js" as Utils
 
 Item {
     id: root
     property string busType
     property string service: ""
     property string objectPath: ""
-    property string iface: ""
+    property string iface: service
     property string method: ""
     property var arguments: []
     property var signature: null
     property var inSignature: null
     signal callFinished(reply: var)
-
-    property var msg: {
-        "service": root.service,
-        "path": root.objectPath,
-        "iface": root.iface,
-        "member": root.method,
-        "arguments": root.arguments,
-        "signature": root.signature,
-        "inSignature": root.inSignature
-    }
+    property var callbackRef: null
 
     function builCmd() {
-        let cmd = "gdbus call --session --dest " + service + " --object-path " + objectPath + " --method " + (iface || service) + "." + method;
-        if (root.arguments.length !== 0) {
-            cmd += ` '${root.arguments.join(" ")}'`;
-        }
+        let cmd = "gdbus call --session --dest " + service + " --object-path " + objectPath + " --method " + iface + "." + method;
+        root.arguments.forEach(argument => {
+            cmd += ` '${argument}'`;
+        });
         return cmd;
     }
 
@@ -37,6 +29,7 @@ Item {
         id: runCommand
         onExited: (cmd, exitCode, exitStatus, stdout, stderr) => {
             if (exitCode !== 0) {
+                stderr = Utils.parseGVariant(stderr);
                 root.callFinished({
                     isError: true,
                     isValid: false,
@@ -47,8 +40,6 @@ Item {
                     value: stderr
                 });
             } else {
-                stdout = stdout.trim().replace(/^\([']?/, "") // starting ( or ('
-                .replace(/[']?,\)$/, ""); // ending ,) or ',)
                 root.callFinished({
                     isError: false,
                     isValid: true,
@@ -56,13 +47,11 @@ Item {
                         isValid: false,
                         message: ""
                     },
-                    value: stdout
+                    value: Utils.parseGVariant(stdout)
                 });
             }
         }
     }
-
-    property var callbackRef: null
 
     function call(callback) {
         if (callbackRef) {
