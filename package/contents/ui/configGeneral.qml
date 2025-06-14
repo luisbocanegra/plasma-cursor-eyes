@@ -14,9 +14,9 @@ KCM.SimpleKCM {
     property alias cfg_eyesCount: eyesCountSpinbox.value
     property alias cfg_eyeSpacing: eyeSpacingSpinbox.value
     property alias cfg_eyeBorderWidth: eyeBorderWidthSpinbox.value
-    property real cfg_eyeScaling: eyeScalingField.text
-    property real cfg_irisSize: irisSizeField.text
-    property real cfg_pupilSize: pupilSizeField.text
+    property real cfg_eyeScaling
+    property real cfg_irisSize
+    property real cfg_pupilSize
     property alias cfg_fontSize: fontSizeSpinbox.value
     property alias cfg_bgFillPanel: bgFillPanelCheckbox.checked
     property string cfg_irisColor: irisColorButton.color
@@ -190,121 +190,36 @@ KCM.SimpleKCM {
             to: 100
         }
 
-        RowLayout {
+        Components.DoubleSpinBox {
+            id: eyeScalingField
             Kirigami.FormData.label: i18n("Eye Scaling:")
-            TextField {
-                id: eyeScalingField
-                placeholderText: "0-1"
-                text: parseFloat(cfg_eyeScaling).toFixed(validator.decimals)
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 4.5
-
-                validator: DoubleValidator {
-                    bottom: 0.0
-                    top: 1.0
-                    decimals: 2
-                    notation: DoubleValidator.StandardNotation
-                }
-
-                onTextChanged: {
-                    const newVal = parseFloat(text);
-                    cfg_eyeScaling = isNaN(newVal) ? 0 : newVal;
-                }
-
-                Components.ValueMouseControl {
-                    height: parent.height - 8
-                    width: height
-                    anchors.right: parent.right
-                    anchors.rightMargin: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    from: parent.validator.bottom
-                    to: parent.validator.top
-                    decimals: parent.validator.decimals
-                    stepSize: 0.05
-                    value: cfg_eyeScaling
-                    onValueChanged: {
-                        cfg_eyeScaling = parseFloat(value);
-                    }
-                }
+            from: 0 * multiplier
+            to: 1 * multiplier
+            value: root.cfg_eyeScaling * multiplier
+            onValueModified: {
+                root.cfg_eyeScaling = value / eyeScalingField.multiplier;
             }
         }
 
-        RowLayout {
+        Components.DoubleSpinBox {
+            id: irisSizeField
             Kirigami.FormData.label: i18n("Iris Scaling:")
-            TextField {
-                id: irisSizeField
-                placeholderText: "0-1"
-                text: parseFloat(cfg_irisSize).toFixed(validator.decimals)
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 4.5
-
-                validator: DoubleValidator {
-                    bottom: 0.0
-                    top: 1.0
-                    decimals: 2
-                    notation: DoubleValidator.StandardNotation
-                }
-
-                onTextChanged: {
-                    const newVal = parseFloat(text);
-                    cfg_irisSize = isNaN(newVal) ? 0 : newVal;
-                }
-
-                Components.ValueMouseControl {
-                    height: parent.height - 8
-                    width: height
-                    anchors.right: parent.right
-                    anchors.rightMargin: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    from: parent.validator.bottom
-                    to: parent.validator.top
-                    decimals: parent.validator.decimals
-                    stepSize: 0.05
-                    value: cfg_irisSize
-                    onValueChanged: {
-                        cfg_irisSize = parseFloat(value);
-                    }
-                }
+            from: 0 * multiplier
+            to: 1 * multiplier
+            value: root.cfg_irisSize * multiplier
+            onValueModified: {
+                root.cfg_irisSize = value / irisSizeField.multiplier;
             }
         }
 
-        RowLayout {
+        Components.DoubleSpinBox {
+            id: pupilSizeField
             Kirigami.FormData.label: i18n("Pupil Scaling:")
-            enabled: irisImageTextfield.text === ""
-            TextField {
-                id: pupilSizeField
-                placeholderText: "0-1"
-                text: parseFloat(cfg_pupilSize).toFixed(validator.decimals)
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 4.5
-
-                validator: DoubleValidator {
-                    bottom: 0.0
-                    top: 1.0
-                    decimals: 2
-                    notation: DoubleValidator.StandardNotation
-                }
-
-                onTextChanged: {
-                    const newVal = parseFloat(text);
-                    cfg_pupilSize = isNaN(newVal) ? 0 : newVal;
-                }
-
-                Components.ValueMouseControl {
-                    height: parent.height - 8
-                    width: height
-                    anchors.right: parent.right
-                    anchors.rightMargin: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    from: parent.validator.bottom
-                    to: parent.validator.top
-                    decimals: parent.validator.decimals
-                    stepSize: 0.05
-                    value: cfg_pupilSize
-                    onValueChanged: {
-                        cfg_pupilSize = parseFloat(value);
-                    }
-                }
+            from: 0 * multiplier
+            to: 1 * multiplier
+            value: root.cfg_pupilSize * multiplier
+            onValueModified: {
+                root.cfg_pupilSize = value / pupilSizeField.multiplier;
             }
         }
 
