@@ -15,7 +15,7 @@
         "License": "GPL-3.0",
         "Name": "Cursor Eyes",
         "Icon": "cursor-arrow",
-        "Version": "0.2.1",
+        "Version": "0.2.2",
         "Website": "https://github.com/luisbocanegra/plasma-cursor-eyes"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
