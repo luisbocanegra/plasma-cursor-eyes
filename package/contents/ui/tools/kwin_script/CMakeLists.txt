@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 set(PROJECT_NAME "plasma-cursor-eyes")
 project(${PROJECT_NAME})
-option(INSTALL_SCRIPT_QML "Install KWin Script" OFF)
+option(INSTALL_SCRIPT_QML "Install KWin Script" ON)
 option(PACKAGE_SCRIPT_QML "Package KWin Script" OFF)
 
 set(KF6_MIN_VERSION "6.0.0")

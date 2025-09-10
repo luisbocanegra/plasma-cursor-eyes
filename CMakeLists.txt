@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT_NAME "plasma-cursor-eyes")
-project(${PROJECT_NAME})
-option(BUILD_PLUGIN "Build the plugin" OFF)
+project("plasma-cursor-eyes")
 option(INSTALL_PLASMOID "Install plasmoid" ON)
 option(PACKAGE_PLASMOID "Package plasmoid" OFF)
 
@@ -36,8 +34,4 @@ if(PACKAGE_PLASMOID)
     )
 endif()
 
-add_subdirectory(kwin_script)
-
-if(BUILD_PLUGIN)
-    add_subdirectory(plugin)
-endif()
+add_subdirectory(package/contents/ui/tools/kwin_script)
